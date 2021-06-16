@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{08936880-66d0-4571-aba9-1657ab087273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\assets">
+      <UniqueIdentifier>{b6f77e17-a258-423a-86e7-4474e883d872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\assets\ascii-sheets">
+      <UniqueIdentifier>{9d203c50-b8e4-459e-9ce2-62ec0cae9d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\GUI">
+      <UniqueIdentifier>{227a7e7b-83d0-43ec-9788-8eabe05b8871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader">
+      <UniqueIdentifier>{b943e8b8-ae75-407d-9c8d-707daf02b96e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader\sprite2d">
+      <UniqueIdentifier>{a8b2348a-a1df-4669-a879-5f2c26c76ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader\sprite3d">
+      <UniqueIdentifier>{8b4631ff-aba0-4141-832c-95c92131abe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files">
+      <UniqueIdentifier>{22885dde-6a70-4c8f-8c4f-0bbffada6d89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source Files">
+      <UniqueIdentifier>{ffd7efdb-5040-4bb3-84e1-8641016ceab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="content">
+      <UniqueIdentifier>{58c9e69b-9822-4f45-af40-54aea75bdb48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="content\shader">
+      <UniqueIdentifier>{f96de2d8-8b32-46b1-aba7-9fce1314ec5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files\Image">
+      <UniqueIdentifier>{e9a4415d-3c06-408d-8482-2017ca9b5b06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files\Sprite">
+      <UniqueIdentifier>{601e33a2-9f3e-4bdf-ac73-d1af89e2775f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files\Array">
+      <UniqueIdentifier>{8cd7c839-0021-4c96-a6ec-e25c1307325a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header Files\Decal">
+      <UniqueIdentifier>{af18538c-7444-4b0d-b2f4-fe3983b87116}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Engine\assets\isometricMask.png">
+      <Filter>Engine\assets</Filter>
+    </Image>
+    <Image Include="Engine\assets\ascii-sheets\high.png">
+      <Filter>Engine\assets\ascii-sheets</Filter>
+    </Image>
+    <Image Include="Engine\assets\ascii-sheets\low.png">
+      <Filter>Engine\assets\ascii-sheets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\GUI\Alignment.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\Button.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\Label.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\Panel.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\Picture.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\UserInterface.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUI\Widget.h">
+      <Filter>Engine\GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Camera.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\defines.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Engine.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\GUIEngine.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\IndexBuffer.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\IsometricView.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\KeyManager.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\MathHelper.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Pixel.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\RenderTarget.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Shader.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextureAtlas.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Timer.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TransformedView.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\util.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\vec2d.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\vec3d.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\VertexBuffer.h">
+      <Filter>Engine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LineShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FaceTemplate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chunk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureAtlas2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BaseImage.h">
+      <Filter>Engine\Header Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Image2D.h">
+      <Filter>Engine\Header Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Array1D.h">
+      <Filter>Engine\Header Files\Array</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Array2D.h">
+      <Filter>Engine\Header Files\Array</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Array3D.h">
+      <Filter>Engine\Header Files\Array</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextureId.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sprite2D.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpriteManager.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpriteShader.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpriteShader3D.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Image1D.h">
+      <Filter>Engine\Header Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Image3D.h">
+      <Filter>Engine\Header Files\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Decal3D.h">
+      <Filter>Engine\Header Files\Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Decal.h">
+      <Filter>Engine\Header Files\Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\StringDecal.h">
+      <Filter>Engine\Header Files\Decal</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Sprite3D.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\BaseSprite.h">
+      <Filter>Engine\Header Files\Sprite</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Shader\sprite3d\sprite3d.frag">
+      <Filter>Engine\Shader\sprite3d</Filter>
+    </None>
+    <None Include="Engine\Shader\sprite3d\sprite3d.vert">
+      <Filter>Engine\Shader\sprite3d</Filter>
+    </None>
+    <None Include="Engine\Shader\sprite2d\spriteShader.frag">
+      <Filter>Engine\Shader\sprite2d</Filter>
+    </None>
+    <None Include="Engine\Shader\sprite2d\spriteShader.vert">
+      <Filter>Engine\Shader\sprite2d</Filter>
+    </None>
+    <None Include="content\shader\blockShader.frag">
+      <Filter>content\shader</Filter>
+    </None>
+    <None Include="content\shader\blockShader.vert">
+      <Filter>content\shader</Filter>
+    </None>
+    <None Include="content\shader\lineShader.frag">
+      <Filter>content\shader</Filter>
+    </None>
+    <None Include="content\shader\lineShader.vert">
+      <Filter>content\shader</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Engine\Engine.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\stbi.cpp">
+      <Filter>Engine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
