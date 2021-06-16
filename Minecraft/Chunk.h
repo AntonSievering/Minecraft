@@ -41,7 +41,7 @@ public:
 			&& index.z < g_nChunkWidth;
 	}
 
-	void buildMesh(const uint16_t nSlots, const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
+	void buildMesh(const uint32_t nSlots, const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
 	{
 		std::vector<Engine::MinecraftVertex> vVertices{};
 

@@ -4,14 +4,14 @@
 #include "Engine/Camera.h"
 #include "BlockShader.h"
 #include "Chunk.h"
-#include "Engine/Sprite3D.h"
+#include "Engine/TextureAtlas.h"
 
 class Game : public Engine::GUIEngine
 {
 private:
 	Engine::FloatingCamera camera;
-	Engine::Image3D        textureAtlas;
-	Engine::Sprite3D       sprite3d;
+	Engine::TextureAtlas   textureAtlas;
+	Engine::Sprite3D       texture;
 	BlockShader            shader;
 	Chunk                  chunk;
 
@@ -23,21 +23,17 @@ public:
 		
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
 
-		uint16_t nSlots = 10;
-		textureAtlas = Engine::Image3D(Engine::vu3d(image.getWidth(), image.getHeight(), nSlots));
+		textureAtlas = Engine::TextureAtlas(image.size(), 10);
 		textureAtlas.setSlice(0, image);
-		sprite3d = Engine::Sprite3D(textureAtlas);
+		texture = textureAtlas.createTexture();
 
 		for (int x = 0; x < 16; x++)
 			for (int z = 0; z < 16; z++)
 				for (int y = 0; y < 256; y++)
 					chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
-
+		
 		Chunk c;
-		chunk.buildMesh(nSlots, c, c, c, c);
-
-		glDisable(GL_POLYGON_SMOOTH);
-		glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+		chunk.buildMesh(textureAtlas.getSlotCount(), c, c, c, c);
 
 		return true;
 	}
@@ -71,7 +67,7 @@ public:
 
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());
-		sprite3d.bind();
+		texture.bind();
 		chunk.m_vertices.render();
 
 		//std::cout << (Engine::vf3d)camera.getPosition() << std::endl;

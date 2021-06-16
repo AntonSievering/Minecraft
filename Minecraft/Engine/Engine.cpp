@@ -80,6 +80,10 @@ namespace Engine
 		glFrontFace(GL_CCW);
 		glEnable(GL_DEPTH_TEST);
 
+		// disable polygon smoothing
+		glDisable(GL_POLYGON_SMOOTH);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+
 		m_sSpriteShader = SpriteShader("Engine/Shader/sprite2d/spriteShader");
 		m_pStringTables[(uint32_t)Resolution::LOW]    = Sprite2D("Engine/assets/ascii-sheets/low.png", GL_NEAREST, GL_NEAREST);
 		m_pStringTables[(uint32_t)Resolution::MEDIUM] = Sprite2D("Engine/assets/ascii-sheets/high.png", GL_LINEAR, GL_LINEAR); // Medium = High
