@@ -38,7 +38,13 @@ namespace Engine
 			m_nVertices = nVertices;
 			genBuffer();
 			setData(pVertices);
+			createVertexAttribs();
+			unbind();
+		}
 
+	private:
+		virtual void createVertexAttribs() const noexcept
+		{
 			GLuint nIterator = 0;
 			size_t nSum = 0;
 
@@ -48,7 +54,7 @@ namespace Engine
 				{
 					glEnableVertexAttribArray(nIterator);
 					glVertexAttribPointer(nIterator, (GLint)dims, GL_FLOAT, GL_FALSE, sizeof(VertexType), (void *)nSum);
-					
+
 					nIterator++;
 					nSum += sizeof(float) * dims;
 				}
@@ -59,11 +65,8 @@ namespace Engine
 			parseParameter(nTexture);
 			parseParameter(nColour);
 			parseParameter(nExtra);
-
-			unbind();
 		}
 
-	private:
 		void genBuffer() noexcept
 		{
 			GLuint vao{}, bufferId{};
@@ -113,6 +116,27 @@ namespace Engine
 		}
 	};
 	
+	class MinecraftVertexbuffer2 : public Vertexbuffer<MinecraftVertex2, 0, 0, 0, 0, 0>
+	{
+	public:
+		MinecraftVertexbuffer2() noexcept = default;
+		
+		MinecraftVertexbuffer2(const std::vector<MinecraftVertex2> &vVertices)
+			: Vertexbuffer(vVertices) {}
+
+		MinecraftVertexbuffer2(MinecraftVertex2 *pVertices, const size_t nVertices)
+			: Vertexbuffer(pVertices, nVertices) {}
+
+	public:
+		void createVertexAttribs() const noexcept override
+		{
+			glEnableVertexAttribArray(0);
+			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MinecraftVertex2), (void *)offsetof(MinecraftVertex2, pos));
+			glEnableVertexAttribArray(1);
+			glVertexAttribPointer(0, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(MinecraftVertex2), (void *)offsetof(MinecraftVertex2, data));
+		}
+	};
+
 	using VertexbufferSprite3D  = Vertexbuffer<Vertex3D, 3, 3, 2, 0, 0>;
 	using VertexbufferSprite2D  = Vertexbuffer<Vertex2D, 2, 0, 2, 0, 0>;
 	using MinecraftVertexbuffer = Vertexbuffer<MinecraftVertex, 3, 0, 3, 0, 1>;

@@ -1,12 +1,15 @@
 #pragma once
 #include "defines.h"
 #include <cstdint>
+#include <vector>
 
 namespace Engine
 {
 	template <class T>
 	class IndexBuffer
 	{
+		static_assert(std::is_same<T, uint8_t>::value || std::is_same<T, uint16_t>::value || std::is_same<T, uint32_t>::value);
+
 		struct SharedResource
 		{
 			GLuint m_nBufferId{};
@@ -17,8 +20,6 @@ namespace Engine
 			virtual ~SharedResource() noexcept { glDeleteBuffers(1, &m_nBufferId); }
 		};
 
-		static_assert(std::is_same<T, uint8_t>::value || std::is_same<T, uint16_t>::value || std::is_same<T, uint32_t>::value);
-
 	private:
 		std::shared_ptr<SharedResource> m_shrBuffer{};
 		uint32_t                        m_nIndices = 0;
@@ -26,7 +27,7 @@ namespace Engine
 	public:
 		IndexBuffer() noexcept = default;
 
-		IndexBuffer(T *data, uint32_t nIndices) noexcept
+		IndexBuffer(const T *data, uint32_t nIndices) noexcept
 		{
 			GLuint bufferId;
 			glGenBuffers(1, &bufferId);
@@ -38,6 +39,10 @@ namespace Engine
 			m_nIndices = nIndices;
 		}
 
+		IndexBuffer(const std::vector<T> &data) noexcept
+			: IndexBuffer(data.data(), data.size()) {}
+
+	public:
 		GLuint getBufferId() const noexcept
 		{
 			return m_shrBuffer.get()->m_nBufferId;

@@ -85,6 +85,12 @@ namespace Engine
 		float brightness;
 	};
 
+	struct MinecraftVertex2
+	{
+		vf3d pos;
+		uint32_t data;
+	};
+
 	static const Pixel
 		BLACK  (  0,   0,   0), BLANK       (  0,   0,   0, 0), WHITE            (255, 255, 255),
 		GREY   (192, 192, 192), DARK_GREY   (128, 128, 128   ), VERY_DARK_GREY   ( 64,  64,  64),

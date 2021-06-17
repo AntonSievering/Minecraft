@@ -214,6 +214,9 @@
     <ClInclude Include="Engine\BaseSprite.h">
       <Filter>Engine\Header Files\Sprite</Filter>
     </ClInclude>
+    <ClInclude Include="ChunkDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shader\sprite3d\sprite3d.frag">

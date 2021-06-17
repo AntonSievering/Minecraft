@@ -33,7 +33,11 @@ public:
 					chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
 		
 		Chunk c;
+		Engine::Timer timer = Engine::Timer().start();
+		
 		chunk.buildMesh(textureAtlas.getSlotCount(), c, c, c, c);
+
+		std::cout << timer.getElapsedTime() << std::endl;
 
 		return true;
 	}
@@ -68,7 +72,8 @@ public:
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());
 		texture.bind();
-		chunk.m_vertices.render();
+		chunk.m_vertices.bind();
+		chunk.m_indices.render();
 
 		//std::cout << (Engine::vf3d)camera.getPosition() << std::endl;
 
