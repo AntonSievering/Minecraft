@@ -22,9 +22,9 @@ float brightness[3] = float[3](1.0f, 0.85f, 0.7f);
 
 void main()
 {
-	float x = float(a_data1 & uint(0x1F));
-	float z = float((a_data1 & uint(0x3E0)) >> 5);
-	float y = float(a_data1 >> 12);
+	float x = u_chunkBaseCoord.x + float(a_data1 & uint(0x1F));
+	float z = u_chunkBaseCoord.z + float((a_data1 & uint(0x3E0)) >> 5);
+	float y = u_chunkBaseCoord.y + float(a_data1 >> 12);
 
 	v_brightness = brightness[(a_data1 & uint(0xC00)) >> 10];
 

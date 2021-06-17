@@ -20,7 +20,7 @@ public:
 	{
 		camera = Engine::FloatingCamera(glm::radians(90.0f), (float)GetScreenSize().x, (float)GetScreenSize().y);
 		shader = BlockShader("content/shader/blockShader");
-		
+
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
 
 		textureAtlas = Engine::TextureAtlas(image.size(), 1);
