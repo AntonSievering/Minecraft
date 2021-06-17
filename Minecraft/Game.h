@@ -23,7 +23,7 @@ public:
 		
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
 
-		textureAtlas = Engine::TextureAtlas(image.size(), 10);
+		textureAtlas = Engine::TextureAtlas(image.size(), 1);
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
@@ -31,11 +31,11 @@ public:
 			for (int z = 0; z < 16; z++)
 				for (int y = 0; y < 256; y++)
 					chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
-		
+				
 		Chunk c;
 		Engine::Timer timer = Engine::Timer().start();
 		
-		chunk.buildMesh(textureAtlas.getSlotCount(), c, c, c, c);
+		chunk.buildMesh(c, c, c, c);
 
 		std::cout << timer.getElapsedTime() << std::endl;
 

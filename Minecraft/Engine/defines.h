@@ -80,15 +80,16 @@ namespace Engine
 
 	struct MinecraftVertex
 	{
-		vf3d pos;
-		vf3d tc;
-		float brightness;
-	};
+		uint32_t data[2];
 
-	struct MinecraftVertex2
-	{
-		vf3d pos;
-		uint32_t data;
+	public:
+		MinecraftVertex() noexcept = default;
+		
+		MinecraftVertex(const uint32_t ox, const uint32_t oy, const uint32_t oz, const uint32_t b, const uint32_t tcxyi, const uint32_t tcz) noexcept
+		{
+			data[0] = ox | oz << 5 | b << 10 | oy << 12;
+			data[1] = tcxyi | tcz << 2;
+		}
 	};
 
 	static const Pixel

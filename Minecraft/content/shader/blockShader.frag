@@ -7,8 +7,7 @@ in float v_brightness;
 
 uniform sampler3D u_texture;
 
-
 void main()
 {
-	f_color	= texture(u_texture, v_texCoord) * vec4(v_brightness, v_brightness, v_brightness, 1.0f);
+	f_color	= textureLod(u_texture, v_texCoord, 0) * vec4(v_brightness, v_brightness, v_brightness, 1.0f);
 }

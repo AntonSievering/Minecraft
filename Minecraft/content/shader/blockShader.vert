@@ -1,17 +1,35 @@
 #version 330 core
 
-layout(location = 0) in vec3 a_position;
-layout(location = 1) in vec3 a_texCoord;
-layout(location = 2) in float a_brightness;
+layout(location = 0) in uint a_data1;
+layout(location = 1) in uint a_data2;
 
 out vec3 v_texCoord;
 out float v_brightness;
+out vec3 v_color;
 
+uniform float u_fTextureHeight = 1.0f;
 uniform mat4 u_modelViewProj;
+uniform vec3 u_chunkBaseCoord = vec3(0.0f, 0.0f, 0.0f);
+
+vec2 texCoord[4] = vec2[4](
+	vec2(0.0f, 0.0f),
+	vec2(1.0f, 0.0f),
+	vec2(0.0f, 1.0f),
+	vec2(1.0f, 1.0f)
+);
+
+float brightness[3] = float[3](1.0f, 0.85f, 0.7f);
 
 void main()
 {
-	v_brightness = a_brightness;
-	v_texCoord = a_texCoord;
-	gl_Position = u_modelViewProj * round(vec4(a_position, 1.0f));
+	float x = float(a_data1 & uint(0x1F));
+	float z = float((a_data1 & uint(0x3E0)) >> 5);
+	float y = float(a_data1 >> 12);
+
+	v_brightness = brightness[(a_data1 & uint(0xC00)) >> 10];
+
+	v_texCoord.xy = texCoord[a_data2 & uint(0x3)];
+	v_texCoord.z  = float(a_data2 >> 2) / u_fTextureHeight;
+	
+	gl_Position = u_modelViewProj * vec4(x, y, z, 1.0f);
 }
