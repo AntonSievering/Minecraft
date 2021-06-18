@@ -4,7 +4,6 @@
 #include "Sprite.h"
 #include "TransformedView.h"
 
-
 namespace Engine
 {
 	class IsometricView
@@ -36,13 +35,13 @@ namespace Engine
 		vi2d getSelectedCell(const vf2d &vMouse, const TransformedView &tv) const noexcept
 		{
 			vf2d vMouseWorld = tv.screenToWorld(vMouse);
-			vf2d vInverted   = vf2d(vMouseWorld.x, (1.0f - vMouseWorld.y) / m_fAspectRatio);
-			
-			vf2d vCell     = { floor(vInverted.x / m_vTileSizeWorld.x), ceil(vInverted.y / m_vTileSizeWorld.y) };
+			vf2d vInverted = vf2d(vMouseWorld.x, (1.0f - vMouseWorld.y) / m_fAspectRatio);
+
+			vf2d vCell = { floor(vInverted.x / m_vTileSizeWorld.x), ceil(vInverted.y / m_vTileSizeWorld.y) };
 			vi2d vSelected = { (int32_t)(vCell.x + vCell.y), (int32_t)(vCell.y - vCell.x) };
 
 			vf2d vOffset = vInverted % m_vTileSizeWorld / m_vTileSizeWorld;
-			vOffset.x = std::fmod( vOffset.x + 1.0f, 1.0f);
+			vOffset.x = std::fmod(vOffset.x + 1.0f, 1.0f);
 			vOffset.y = std::fmod(-vOffset.y + 1.0f, 1.0f);
 
 			Pixel sample = m_mask.getImage().sampleNearest(vOffset);

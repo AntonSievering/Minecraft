@@ -38,7 +38,7 @@ namespace Engine
 		virtual Pixel *data() const noexcept = 0;
 		virtual ImageSizeType size() const noexcept = 0;
 		virtual Pixel getPixel(const ImageSizeType pixel) const noexcept = 0;
-		
+
 		ImageType getImage() const noexcept
 		{
 			return m_image;
@@ -61,7 +61,7 @@ namespace Engine
 		{
 			m_textureId.bind();
 		}
-		
+
 		static void unbind() noexcept
 		{
 			m_textureId.unbind();

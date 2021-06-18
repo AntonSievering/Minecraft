@@ -3,7 +3,6 @@
 #include <array>
 #include "Defines.h"
 
-
 namespace Engine
 {
 	class KeyManager
@@ -15,7 +14,7 @@ namespace Engine
 
 	public:
 		KeyManager() noexcept = default;
-		
+
 		KeyManager(const KeyArray &keys) noexcept
 		{
 			setKeys(keys);
@@ -43,7 +42,7 @@ namespace Engine
 			HWKey *key = &m_vKeys.at((uint32_t)index);
 
 			key->bPressed = true;
-			key->bHeld    = true;
+			key->bHeld = true;
 		}
 
 		void updateKeyRelease(const Key &index) noexcept
@@ -51,7 +50,7 @@ namespace Engine
 			HWKey *key = &m_vKeys.at((uint32_t)index);
 
 			key->bReleased = true;
-			key->bHeld     = false;
+			key->bHeld = false;
 		}
 
 		void updateKeys() noexcept
@@ -60,7 +59,7 @@ namespace Engine
 			{
 				HWKey *key = &m_vKeys.at(i);
 
-				key->bPressed  = false;
+				key->bPressed = false;
 				key->bReleased = false;
 			}
 		}

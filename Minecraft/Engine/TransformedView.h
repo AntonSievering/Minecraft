@@ -2,7 +2,6 @@
 
 #include "vec2d.h"
 
-
 namespace Engine
 {
 	class TransformedView

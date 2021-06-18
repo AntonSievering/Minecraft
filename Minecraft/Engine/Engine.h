@@ -32,11 +32,11 @@
 #include "deps/stb_image_write.h"
 
 #ifdef _WIN32
-	#include <Windows.h>
+#include <Windows.h>
 #endif
 
 #if defined(_DEBUG) || defined(DEBUG)
-	#define DO_DEBUG_MESSAGES
+#define DO_DEBUG_MESSAGES
 #endif
 
 // Check for C++20
@@ -49,20 +49,20 @@ namespace Engine
 	class PixelEngine
 	{
 	public:
-		using clock      = Timer::clock;
+		using clock = Timer::clock;
 		using time_point = Timer::time_point;
 
 	public:
 		// SDL Window which OpenGL draws to
-		SDL_Window   *m_window = nullptr;
+		SDL_Window *m_window = nullptr;
 		SDL_GLContext m_glContext{};
 
 		// Timing
-		static constexpr float m_fTimeUpdateTitle   = 1.0f;
-		uint64_t               m_nFPS               = 0;
+		static constexpr float m_fTimeUpdateTitle = 1.0f;
+		uint64_t               m_nFPS = 0;
 		uint64_t               m_nFramesSinceUpdate = 0;
-		float                  m_fTimeSinceStart    = 0.0f;
-		float                  m_fElapsedTime       = 0.0f;
+		float                  m_fTimeSinceStart = 0.0f;
+		float                  m_fElapsedTime = 0.0f;
 		float                  m_fTimeToSetTitle = 0.0f;
 
 		// input
@@ -73,7 +73,7 @@ namespace Engine
 		SpriteShader  m_sSpriteShader{};
 		Sprite2D      m_pStringTables[3]{};
 
-		uint32_t nLehmerSeed            = 0;
+		uint32_t nLehmerSeed = 0;
 		vf2d    m_relativeMouseMovement = { 0.0f, 0.0f };
 
 	protected:
@@ -102,7 +102,7 @@ namespace Engine
 	public:
 		bool     Construct(vi2d size, FullscreenMode fullscreen, RefreshRate refresh, int subSamples = 1) noexcept; // Prepares the Engine, returns true when succeeds
 		void     Start() noexcept; // Starts the Engine
-		
+
 	public:
 		virtual HWKey GetKey(const Key &key)  const noexcept; // Returns the key states of the requested Key
 		vf2d     GetMouse()                   const noexcept; // Returns the x and y mouse position in OpenGL space
@@ -146,25 +146,25 @@ namespace Engine
 		void DrawSprite(const Sprite2D &sprite, const vf2d &tl, const vf2d &tr, const vf2d &bl, const vf2d &br, const Pixel &tint = WHITE) noexcept;
 		void DrawDecal(const Decal &decal, const Pixel &tint = WHITE) noexcept;
 		void DrawDecalWorld(const Decal &decal, const TransformedView &tv, const Pixel &tint = WHITE) noexcept;
-				
+
 		// Draw Routine for Text
-		void DrawString(const std::string & sText, const vf2d & pos, const float &fScale, const Resolution &res, const Pixel &col = WHITE) const noexcept;
+		void DrawString(const std::string &sText, const vf2d &pos, const float &fScale, const Resolution &res, const Pixel &col = WHITE) const noexcept;
 		void DrawStringWorld(const std::string &sText, const TransformedView &tv, const vf2d &pos, const float &fScale, const Resolution &res, const Pixel &col = WHITE) const noexcept;
 		void DrawStringDecal(const StringDecal &decal, const Pixel &col = WHITE, const Resolution &res = Resolution::MEDIUM) const noexcept;
 		void DrawStringDecalWorld(const StringDecal &decal, const TransformedView &tv, const Pixel &col = WHITE, const Resolution &res = Resolution::MEDIUM) const noexcept;
 
 		float getAspectRatio() const noexcept;
-		
+
 		void Start2D() const noexcept;
 		void End2D() const noexcept;
 
-	// Show / Hide Console
+		// Show / Hide Console
 	protected:
 		static void HideConsole() noexcept;
 		static void ShowConsole() noexcept;
 
 	public:
-		static vf2d GetStringSize(const std::string & s) noexcept;
+		static vf2d GetStringSize(const std::string &s) noexcept;
 
 	protected:
 		virtual void UpdateInternals() noexcept;

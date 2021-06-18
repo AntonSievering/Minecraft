@@ -9,9 +9,9 @@ namespace Engine
 	{
 	private:
 		Engine::Shader m_shader{};
-		int m_nColourUniformLocation    = -1;
+		int m_nColourUniformLocation = -1;
 		int m_nPanOffsetUniformLocation = -1;
-		int m_nZoomUniformLocation      = -1;
+		int m_nZoomUniformLocation = -1;
 
 	public:
 		SpriteShader() noexcept = default;
@@ -19,9 +19,9 @@ namespace Engine
 		SpriteShader(const std::string &sPath) noexcept
 		{
 			m_shader = Engine::Shader(sPath);
-			m_nColourUniformLocation    = m_shader.getUniformLocation("u_color");
+			m_nColourUniformLocation = m_shader.getUniformLocation("u_color");
 			m_nPanOffsetUniformLocation = m_shader.getUniformLocation("u_panOffset");
-			m_nZoomUniformLocation      = m_shader.getUniformLocation("u_fZoom");
+			m_nZoomUniformLocation = m_shader.getUniformLocation("u_fZoom");
 			glUniform1i(m_shader.getUniformLocation("u_texture"), 0);
 		}
 

@@ -22,7 +22,7 @@ namespace Engine
 			v = 0;
 		}
 
-		explicit Pixel(const uint32_t& n)
+		explicit Pixel(const uint32_t &n)
 		{
 			v = n;
 		}

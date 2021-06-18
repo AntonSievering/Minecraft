@@ -16,7 +16,7 @@ namespace Engine
 
 		TextureAtlas(const vu2d vSlotsSize, const uint32_t nSlots) noexcept
 		{
-			m_nSlots    = nSlots;
+			m_nSlots = nSlots;
 			m_vSlotSize = vSlotsSize;
 			m_txAtlas = Image3D(vu3d(m_vSlotSize.x, m_vSlotSize.y, m_nSlots));
 		}

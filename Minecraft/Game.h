@@ -31,10 +31,10 @@ public:
 			for (int z = 0; z < 16; z++)
 				for (int y = 0; y < 256; y++)
 					chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
-				
+
 		Chunk c;
 		Engine::Timer timer = Engine::Timer().start();
-		
+
 		chunk.buildMesh(c, c, c, c);
 
 		std::cout << timer.getElapsedTime() << std::endl;

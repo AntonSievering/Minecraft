@@ -20,7 +20,7 @@ namespace Engine
 		Decal3D(const Sprite2D &texture, const vf3d &pos, const vf3d &size, bool bInverseNormal = false) noexcept
 		{
 			m_texture = texture;
-			
+
 			vf3d normal = Engine::vf3d(0.0f, 0.0f, size.z).cross(Engine::vf3d(size.x, size.y, 0.0f)).normalize();
 
 			Vertex3D vertices[6] = {

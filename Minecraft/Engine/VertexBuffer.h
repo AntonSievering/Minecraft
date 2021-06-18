@@ -6,7 +6,6 @@
 #include <cstdint>
 #include <stddef.h>
 
-
 namespace Engine
 {
 	template <class VertexType, uint8_t nPos = 0, uint8_t nNormal = 0, uint8_t nTexture = 0, uint8_t nColour = 0, uint8_t nExtra = 0>
@@ -15,7 +14,7 @@ namespace Engine
 		struct SharedResource
 		{
 			GLuint m_nBufferId = 0;
-			GLuint m_nVao      = 0;
+			GLuint m_nVao = 0;
 
 		public:
 			SharedResource() noexcept = default;
@@ -82,7 +81,7 @@ namespace Engine
 			glDrawArrays(mode, 0, (GLsizei)getVerticesCount());
 		}
 	};
-	
+
 	template <class VertexType, uint8_t nPos = 0, uint8_t nNormal = 0, uint8_t nTexture = 0, uint8_t nColour = 0, uint8_t nExtra = 0>
 	class StandardVertexbuffer : public BaseVertexbuffer<VertexType, nPos, nNormal, nTexture, nColour, nExtra>
 	{
@@ -133,7 +132,7 @@ namespace Engine
 	{
 	public:
 		MinecraftVertexbuffer() noexcept = default;
-		
+
 		MinecraftVertexbuffer(const std::vector<MinecraftVertex> &vVertices)
 			: MinecraftVertexbuffer(vVertices.data(), vVertices.size()) {}
 
@@ -156,6 +155,6 @@ namespace Engine
 		}
 	};
 
-	using VertexbufferSprite3D  = StandardVertexbuffer<Vertex3D, 3, 3, 2, 0, 0>;
-	using VertexbufferSprite2D  = StandardVertexbuffer<Vertex2D, 2, 0, 2, 0, 0>;
+	using VertexbufferSprite3D = StandardVertexbuffer<Vertex3D, 3, 3, 2, 0, 0>;
+	using VertexbufferSprite2D = StandardVertexbuffer<Vertex2D, 2, 0, 2, 0, 0>;
 }

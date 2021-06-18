@@ -2,11 +2,11 @@
 
 #include <cstdint>
 
-constexpr uint16_t g_nIdMask            = 0b1111'1111'1100'0000;
-constexpr uint16_t g_nIdShiftBits       = 6;
-constexpr uint16_t g_nDataMask          = 0b0000'0000'0011'1100;
-constexpr uint16_t g_nDataShiftBits     = 2;
-constexpr uint16_t g_nRotationMask      = 0b0000'0000'0000'0011;
+constexpr uint16_t g_nIdMask = 0b1111'1111'1100'0000;
+constexpr uint16_t g_nIdShiftBits = 6;
+constexpr uint16_t g_nDataMask = 0b0000'0000'0011'1100;
+constexpr uint16_t g_nDataShiftBits = 2;
+constexpr uint16_t g_nRotationMask = 0b0000'0000'0000'0011;
 constexpr uint16_t g_nRotationShiftBits = 0;
 
 class Block

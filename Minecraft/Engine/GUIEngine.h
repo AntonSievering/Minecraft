@@ -16,9 +16,9 @@ namespace Engine
 
 			MainUserInterface(const vf2d &pos, const vf2d &size, GUIEngine *e) noexcept
 			{
-				this->pos  = pos;
+				this->pos = pos;
 				this->size = size;
-				m_pEngine  = e;
+				m_pEngine = e;
 			}
 
 			~MainUserInterface() noexcept override {}
@@ -37,7 +37,7 @@ namespace Engine
 	public:
 		GUIEngine() noexcept : PixelEngine() {};
 
-	// GUI Integration
+		// GUI Integration
 	public:
 		void attachUserInterface(GUI::UserInterface *pUi) noexcept
 		{

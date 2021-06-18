@@ -17,13 +17,13 @@ namespace Engine
 
 		Array2D(const vu2d size) noexcept
 		{
-			m_size  = size;
+			m_size = size;
 			m_array = Array1D<T>((size_t)size.x * size.y);
 		}
 
 		Array2D(T *data, const vu2d size) noexcept
 		{
-			m_size  = size;
+			m_size = size;
 			m_array = Array1D<T>(data, (size_t)size.x * size.y);
 		}
 

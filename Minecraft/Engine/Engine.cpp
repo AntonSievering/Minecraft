@@ -7,11 +7,11 @@ namespace Engine
 		// Init SDL
 		SDL_Init(SDL_INIT_EVERYTHING);
 
-		SDL_GL_SetAttribute(SDL_GL_RED_SIZE,        8);
-		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE,      8);
-		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE,       8);
-		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE,      8);
-		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE,    32);
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, 32);
 		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, true);
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 		SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, subSamples);
@@ -43,25 +43,25 @@ namespace Engine
 			return false;
 
 		// get some information about the user
-		m_sOpenGLVersion     = (const char*)glGetString(GL_VERSION);
-		m_sGraficsCard       = (const char*)glGetString(GL_RENDERER);
-		m_sGraficsCardVendor = (const char*)glGetString(GL_VENDOR);
-		
+		m_sOpenGLVersion = (const char *)glGetString(GL_VERSION);
+		m_sGraficsCard = (const char *)glGetString(GL_RENDERER);
+		m_sGraficsCardVendor = (const char *)glGetString(GL_VENDOR);
+
 		m_mapKeys =
 		{
 			{ 0, Engine::Key::MOUSE_LEFT }, { 1, Engine::Key::MOUSE_RIGHT }, { 2, Engine::Key::MOUSE_MIDDLE },
 			{ 97,  Engine::Key::A }, { 98,  Engine::Key::B }, { 99,  Engine::Key::C }, { 100, Engine::Key::D }, { 101, Engine::Key::E }, { 102, Engine::Key::F }, { 103, Engine::Key::G }, { 104, Engine::Key::H },	{ 105, Engine::Key::I },
 			{ 106, Engine::Key::J }, { 107, Engine::Key::K }, { 108, Engine::Key::L }, { 109, Engine::Key::M }, { 110, Engine::Key::N }, { 111, Engine::Key::O }, { 112, Engine::Key::P }, { 113, Engine::Key::Q }, { 114, Engine::Key::R },
 			{ 115, Engine::Key::S }, { 116, Engine::Key::T }, { 117, Engine::Key::U }, { 118, Engine::Key::V }, { 119, Engine::Key::W }, { 120, Engine::Key::X }, { 121, Engine::Key::Y }, { 122, Engine::Key::Z },
-			
+
 			{ 48,  Engine::Key::K0 }, { 49,  Engine::Key::K1 }, { 50,  Engine::Key::K2 }, { 51,  Engine::Key::K3 }, { 52,  Engine::Key::K4 }, { 53,  Engine::Key::K5 }, { 54,  Engine::Key::K6 }, { 55,  Engine::Key::K7 }, { 56,  Engine::Key::K8 }, { 57,  Engine::Key::K9 },
-			
+
 			{ 1073741882, Engine::Key::F1            }, { 1073741883, Engine::Key::F2          }, { 1073741884, Engine::Key::F3           }, { 1073741885, Engine::Key::F4        }, { 1073741886, Engine::Key::F5          }, { 1073741887, Engine::Key::F6  },
 			{ 1073741889, Engine::Key::F7            }, { 1073741890, Engine::Key::F8          }, { 1073741891, Engine::Key::F9           }, { 1073741892, Engine::Key::F10       }, { 1073741893, Engine::Key::F11         }, { 1073741894, Engine::Key::F12 },
-			
+
 			{ 1073741907, Engine::Key::NP_ENABLE     }, { 1073741908, Engine::Key::NP_DIVIDE   }, { 1073741909,  Engine::Key::NP_MULITPLY }, { 1073741910,  Engine::Key::NP_MINUS },
 			{ 1073741911, Engine::Key::NP_PLUS       }, { 1073741912, Engine::Key::NP_ENTER    }, { 1073741923,  Engine::Key::NP_DEL      },
-			
+
 			{ 27,         Engine::Key::ESCAPE        }, { 94,         Engine::Key::CIRCUMFLEX  }, { 9,           Engine::Key::TAB         }, { 1073741881, Engine::Key::CAPS_LOCK }, { 1073742049,  Engine::Key::LSHIFT     },
 			{ 1073742048, Engine::Key::LCTRL         }, { 1073742051, Engine::Key::WINDOWS     }, { 1073742050,  Engine::Key::ALT         }, { 32,         Engine::Key::SPACE     }, { 1073742054,  Engine::Key::ALT_GR     },
 			{ 1073742052, Engine::Key::RCTRL         }, { 1073742053, Engine::Key::RSHIFT      }, { 13,          Engine::Key::RETURN      }, { 8,          Engine::Key::BACKSPACE }, { 180,  Engine::Key::APOSTROPHE        },
@@ -85,16 +85,16 @@ namespace Engine
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
 
 		m_sSpriteShader = SpriteShader("Engine/Shader/sprite2d/spriteShader");
-		m_pStringTables[(uint32_t)Resolution::LOW]    = Sprite2D("Engine/assets/ascii-sheets/low.png", GL_NEAREST, GL_NEAREST);
+		m_pStringTables[(uint32_t)Resolution::LOW] = Sprite2D("Engine/assets/ascii-sheets/low.png", GL_NEAREST, GL_NEAREST);
 		m_pStringTables[(uint32_t)Resolution::MEDIUM] = Sprite2D("Engine/assets/ascii-sheets/high.png", GL_LINEAR, GL_LINEAR); // Medium = High
-		m_pStringTables[(uint32_t)Resolution::HIGH]   = m_pStringTables[(uint32_t)Resolution::MEDIUM];
+		m_pStringTables[(uint32_t)Resolution::HIGH] = m_pStringTables[(uint32_t)Resolution::MEDIUM];
 
 		// seed is a random idx in RAM
 		nLehmerSeed = math::bit_cast<uint64_t>(m_window) & 0xFFFFFFFF;
 
 		return true;
 	}
-	
+
 	bool PixelEngine::SetRefreshRate(RefreshRate refreshRate) noexcept
 	{
 		return SDL_GL_SetSwapInterval((int)refreshRate) == 0;
@@ -109,12 +109,12 @@ namespace Engine
 	{
 		return true;
 	}
-	
+
 	bool PixelEngine::OnUserDestroy() noexcept
 	{
 		return true;
 	}
-	
+
 	void PixelEngine::Start() noexcept
 	{
 		if (!OnUserCreate())
@@ -122,8 +122,8 @@ namespace Engine
 
 		Timer timer = Timer().start();
 		m_fTimeSinceStart = 0.0f;
-		m_fElapsedTime    = 0.0f;
-		m_nFPS            =    0;
+		m_fElapsedTime = 0.0f;
+		m_nFPS = 0;
 
 		while (true)
 		{
@@ -173,12 +173,12 @@ namespace Engine
 	{
 		return m_vMousePos.x;
 	}
-	
+
 	float PixelEngine::GetMouseY() const noexcept
 	{
 		return m_vMousePos.y;
 	}
-	
+
 	float PixelEngine::GetMouseWheel() const noexcept
 	{
 		return m_fWheelMovement;
@@ -368,13 +368,11 @@ namespace Engine
 	// not yet supported
 	void PixelEngine::HideConsole() noexcept
 	{
-		
 	}
 
 	// not yet supported
 	void PixelEngine::ShowConsole() noexcept
 	{
-		
 	}
 #endif
 
@@ -385,7 +383,7 @@ namespace Engine
 	bool PixelEngine::ScanHardware() noexcept
 	{
 		m_vKeyManager.updateKeys();
-			
+
 		// reset mouse wheel movement
 		m_relativeMouseMovement = vf2d();
 		m_fWheelMovement = 0.0f;
@@ -419,12 +417,12 @@ namespace Engine
 					Key key = m_mapKeys.at(nKey);
 					m_vKeyManager.updateKeyPress(key);
 				}
-				#ifdef DO_DEBUG_MESSAGES
+#ifdef DO_DEBUG_MESSAGES
 				else
 				{
 					std::cout << "Key " << nKey << " is not implemented yet" << std::endl;
 				}
-				#endif
+#endif
 			}
 			// Key released
 			else if (event.type == SDL_KEYUP)
@@ -436,12 +434,12 @@ namespace Engine
 					Key key = m_mapKeys.at(nKey);
 					m_vKeyManager.updateKeyRelease(key);
 				}
-				#ifdef DO_DEBUG_MESSAGES
+#ifdef DO_DEBUG_MESSAGES
 				else
 				{
 					std::cout << "Key " << nKey << " is not implemented yet" << std::endl;
 				}
-				#endif
+#endif
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -485,7 +483,7 @@ namespace Engine
 					m_fWheelMovement = -1.0f;
 			}
 		}
-		
+
 		int x, y;
 		SDL_GetMouseState(&x, &y);
 
@@ -502,7 +500,7 @@ namespace Engine
 		if (m_fTimeToSetTitle <= 0.0f)
 		{
 			SDL_SetWindowTitle(m_window, ("C++ Engine - " + m_sAppName + " - " + std::to_string(m_nFramesSinceUpdate) + "fps").c_str());
-			
+
 			m_nFPS = m_nFramesSinceUpdate;
 			m_nFramesSinceUpdate = 0;
 			m_fTimeToSetTitle = m_fTimeUpdateTitle;

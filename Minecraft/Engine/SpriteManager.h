@@ -4,24 +4,23 @@
 
 // Filesystem
 #if _MSC_VER >= 1920 && _MSVC_LANG >= 201703L
-	#include <filesystem>
-	namespace fs = std::filesystem;
+#include <filesystem>
+namespace fs = std::filesystem;
 #else
-	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-	#include <experimental/filesystem>
-	namespace fs = std::experimental::filesystem::v1;
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <experimental/filesystem>
+namespace fs = std::experimental::filesystem::v1;
 #endif
-
 
 namespace Engine
 {
 	class SpriteManager
 	{
-		using SpriteMap         = std::map<std::string, Engine::Sprite>;
-		using SpriteEntry       = std::pair<std::string, Sprite>;
+		using SpriteMap = std::map<std::string, Engine::Sprite>;
+		using SpriteEntry = std::pair<std::string, Sprite>;
 		using DirectoryIterator = fs::directory_iterator;
-		using DirectoryEntry    = const fs::directory_entry;
-		
+		using DirectoryEntry = const fs::directory_entry;
+
 	private:
 		SpriteMap m_sprites;
 
@@ -31,15 +30,15 @@ namespace Engine
 	public:
 		bool contains(const std::string &sFilename) const noexcept
 		{
-			#if _MSVC_LANG >= 201705L
+#if _MSVC_LANG >= 201705L
 			return m_sprites.contains(sFilename);
-			#else
+#else
 			for (const auto &entry : m_sprites)
 				if (entry.first == sFilename)
 					return true;
 
 			return false;
-			#endif
+#endif
 		}
 
 		void load(const std::string &sFilename) noexcept
@@ -53,9 +52,9 @@ namespace Engine
 			if (contains(sFilename))
 				return m_sprites.at(sFilename);
 
-			#ifdef _DEBUG
-				std::cout << "file " << sFilename << " not loaded\n";
-			#endif
+#ifdef _DEBUG
+			std::cout << "file " << sFilename << " not loaded\n";
+#endif
 
 			return Sprite();
 		}

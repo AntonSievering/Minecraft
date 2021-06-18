@@ -40,7 +40,7 @@ namespace Engine
 				: Widget(pos, size)
 			{
 				m_activation = activation;
-				m_decals.decNormal  = Decal(textures.sprNormal,  pos, size);
+				m_decals.decNormal = Decal(textures.sprNormal, pos, size);
 				m_decals.decHovered = Decal(textures.sprHovered, pos, size);
 				m_decals.decPressed = Decal(textures.sprPressed, pos, size);
 			}

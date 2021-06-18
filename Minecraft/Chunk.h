@@ -16,7 +16,6 @@ private:
 public:
 	Engine::MinecraftVertexbuffer m_vertices{};
 	Engine::IndexBuffer<uint32_t> m_indices{};
-	
 
 public:
 	Chunk() noexcept
@@ -38,8 +37,8 @@ public:
 	static bool indexExists(const Engine::vu3d index) noexcept
 	{
 		return index.x < g_nChunkWidth
-			&& index.y < g_nChunkHeight
-			&& index.z < g_nChunkWidth;
+			&&index.y < g_nChunkHeight
+			&&index.z < g_nChunkWidth;
 	}
 
 	void buildMesh(const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
@@ -49,7 +48,7 @@ public:
 
 		std::vector<uint32_t> vIndices{};
 		vIndices.reserve(100000);
-		
+
 		auto faceNeeded = [](const Block block) -> bool
 		{
 			return block.getId() == 0;
@@ -77,16 +76,16 @@ public:
 						Block blockEast = (z != 15) ? getBlock({ x, y, z + 1 }) : east.getBlock({ x, y, 0 });
 						if (faceNeeded(blockEast))
 							FaceTemplate::FullBlock::fillEast(vVertices, vIndices, coordinate, 0);
-						
+
 						Block blockWest = (z != 0) ? getBlock({ x, y, z - 1 }) : west.getBlock({ x, y, 15 });
 						if (faceNeeded(blockWest))
 							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, 0);
-						
+
 						Block blockTop = (y != 255) ? getBlock({ x, y + 1, z }) : Block(0);
 						if (faceNeeded(blockTop))
 							FaceTemplate::FullBlock::fillTop(vVertices, vIndices, coordinate, 0);
-						
-						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(0);
+
+						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(1, 0, 0);
 						if (faceNeeded(blockBottom))
 							FaceTemplate::FullBlock::fillBottom(vVertices, vIndices, coordinate, 0);
 					}
@@ -95,6 +94,6 @@ public:
 		}
 
 		m_vertices = Engine::MinecraftVertexbuffer(vVertices);
-		m_indices  = Engine::IndexBuffer<uint32_t>(vIndices);
+		m_indices = Engine::IndexBuffer<uint32_t>(vIndices);
 	}
 };

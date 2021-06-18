@@ -5,7 +5,6 @@
 #include "SpriteShader.h"
 #include "TransformedView.h"
 
-
 namespace Engine
 {
 	class Decal

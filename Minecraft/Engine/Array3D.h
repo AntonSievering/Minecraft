@@ -17,13 +17,13 @@ namespace Engine
 
 		Array3D(const vu3d size) noexcept
 		{
-			m_size  = size;
+			m_size = size;
 			m_array = Array1D<T>((size_t)size.x * size.y * size.z);
 		}
 
 		Array3D(T *data, const vu3d size) noexcept
 		{
-			m_size  = size;
+			m_size = size;
 			m_array = Array1D<T>((size_t)size.x * size.y * size.z);
 		}
 

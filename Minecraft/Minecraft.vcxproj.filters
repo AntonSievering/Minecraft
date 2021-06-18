@@ -160,9 +160,6 @@
     <ClInclude Include="Block.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextureAtlas2D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\BaseImage.h">
       <Filter>Engine\Header Files\Image</Filter>
     </ClInclude>

@@ -215,7 +215,6 @@
     <ClInclude Include="FaceTemplate.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="LineShader.h" />
-    <ClInclude Include="TextureAtlas2D.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="content\shader\blockShader.frag" />

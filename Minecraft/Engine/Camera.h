@@ -77,7 +77,6 @@ namespace Engine
 		}
 	};
 
-
 	class FPSCamera : public Camera
 	{
 	private:
@@ -105,7 +104,7 @@ namespace Engine
 	public:
 		void onMouseMoved(const float &xRel, const float &yRel) noexcept
 		{
-			yaw   += xRel * mouseSensitivity;
+			yaw += xRel * mouseSensitivity;
 			pitch -= yRel * mouseSensitivity;
 			if (pitch > 89.9f)
 				pitch = 89.9f;

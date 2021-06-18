@@ -50,10 +50,10 @@ namespace Engine
 
 				// set the position on the screen and the texture coordinates
 				vVertices.push_back({ pos_rel.x,               pos_rel.y + fBlockSizeY, fFromX, fFromY });
-				vVertices.push_back({ pos_rel.x,               pos_rel.y,               fFromX, fToY   });
-				vVertices.push_back({ pos_rel.x + fBlockSizeX, pos_rel.y,               fToX,   fToY   });
+				vVertices.push_back({ pos_rel.x,               pos_rel.y,               fFromX, fToY });
+				vVertices.push_back({ pos_rel.x + fBlockSizeX, pos_rel.y,               fToX,   fToY });
 				vVertices.push_back({ pos_rel.x,               pos_rel.y + fBlockSizeY, fFromX, fFromY });
-				vVertices.push_back({ pos_rel.x + fBlockSizeX, pos_rel.y,               fToX,   fToY   });
+				vVertices.push_back({ pos_rel.x + fBlockSizeX, pos_rel.y,               fToX,   fToY });
 				vVertices.push_back({ pos_rel.x + fBlockSizeX, pos_rel.y + fBlockSizeY, fToX,   fFromY });
 
 				if (idx == '\n')

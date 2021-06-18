@@ -1,5 +1,6 @@
 #pragma once
 #include "defines.h"
+#include "VertexBuffer.h"
 #include <cstdint>
 #include <vector>
 

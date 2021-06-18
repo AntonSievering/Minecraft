@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "deps/glm/glm.hpp"
 
-
 namespace Engine
 {
 	class SpriteShader3D
@@ -18,7 +17,7 @@ namespace Engine
 		SpriteShader3D(const std::string &sPath) noexcept
 		{
 			m_shader = Shader(sPath);
-			
+
 			bind();
 			m_nMVPLocation = m_shader.getUniformLocation("u_modelViewProj");
 			glUniform1i(m_shader.getUniformLocation("u_texture"), 0);

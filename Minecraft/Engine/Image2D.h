@@ -19,8 +19,8 @@ namespace Engine
 		{
 			int32_t nBitsPerPixel{}, w{}, h{};
 			stbi_set_flip_vertically_on_load(true);
-			Pixel *pData = (Pixel*)stbi_load(sFilename.c_str(), &w, &h, &nBitsPerPixel, 4);
-			
+			Pixel *pData = (Pixel *)stbi_load(sFilename.c_str(), &w, &h, &nBitsPerPixel, 4);
+
 			m_data = Array2D<Pixel>(pData, vu2d(std::max(w, 0), std::max(h, 0)));
 		}
 

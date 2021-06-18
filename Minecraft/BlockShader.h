@@ -16,9 +16,9 @@ public:
 	BlockShader(const std::string &sPath) noexcept
 	{
 		m_shader = Engine::Shader(sPath);
-		m_nMVPLocation             = m_shader.getUniformLocation("u_modelViewProj");
+		m_nMVPLocation = m_shader.getUniformLocation("u_modelViewProj");
 		m_nChunkCoordinateLocation = m_shader.getUniformLocation("u_chunkBaseCoord");
-		m_nTextureHeightLocation   = m_shader.getUniformLocation("u_fTextureHeight");
+		m_nTextureHeightLocation = m_shader.getUniformLocation("u_fTextureHeight");
 		glUniform1i(m_shader.getUniformLocation("u_texture"), 0);
 		m_shader.unbind();
 	}
