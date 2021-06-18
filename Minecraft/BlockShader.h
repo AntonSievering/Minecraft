@@ -30,7 +30,7 @@ public:
 		glUniformMatrix4fv(m_nMVPLocation, 1, GL_FALSE, &mvp[0][0]);
 	}
 
-	void setChunkBaseCoordinate(const Engine::vu3d coordinate) const noexcept
+	void setChunkBaseCoordinate(const Engine::vi3d coordinate) const noexcept
 	{
 		m_shader.bind();
 		glUniform3f(m_nChunkCoordinateLocation, (float)coordinate.x, (float)coordinate.y, (float)coordinate.z);

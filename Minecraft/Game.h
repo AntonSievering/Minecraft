@@ -19,6 +19,7 @@ public:
 	bool OnUserCreate() noexcept override
 	{
 		camera = Engine::FloatingCamera(glm::radians(90.0f), (float)GetScreenSize().x, (float)GetScreenSize().y);
+		camera.setPosition(glm::vec3(8.0f, 0.0f, 8.0f));
 		shader = BlockShader("content/shader/blockShader");
 
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
@@ -27,7 +28,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		world = new World(3, camera.getPosition());
+		world = new World(10, camera.getPosition());
 
 		return true;
 	}
@@ -43,18 +44,19 @@ public:
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
+			const float fDist = 10.0f * fElapsedTime;
 			if (GetKey(Engine::Key::W).bHeld)
-				camera.moveFront(fElapsedTime);
+				camera.moveFront(fDist);
 			if (GetKey(Engine::Key::S).bHeld)
-				camera.moveFront(-fElapsedTime);
+				camera.moveFront(-fDist);
 			if (GetKey(Engine::Key::A).bHeld)
-				camera.moveSideways(-fElapsedTime);
+				camera.moveSideways(-fDist);
 			if (GetKey(Engine::Key::D).bHeld)
-				camera.moveSideways(fElapsedTime);
+				camera.moveSideways(fDist);
 			if (GetKey(Engine::Key::SPACE).bHeld)
-				camera.moveUp(fElapsedTime);
+				camera.moveUp(fDist);
 			if (GetKey(Engine::Key::LSHIFT).bHeld)
-				camera.moveUp(-fElapsedTime);
+				camera.moveUp(-fDist);
 
 			camera.update();
 		}

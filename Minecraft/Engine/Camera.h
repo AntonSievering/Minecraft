@@ -68,7 +68,7 @@ namespace Engine
 
 		void setFieldOfView(const float &fov) noexcept
 		{
-			projection = glm::perspective(fov, width / height, 0.01f, 100.0f);
+			projection = glm::perspective(fov, width / height, 0.01f, 10000.0f);
 		}
 
 		float getFieldOfView() const noexcept

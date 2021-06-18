@@ -23,7 +23,7 @@ namespace Engine
 			return *this;
 		}
 
-		float getElapsedTime() noexcept
+		float getElapsedTime() const noexcept
 		{
 			int64_t nNanos = std::chrono::duration_cast<std::chrono::nanoseconds>(clock::now() - m_tpStart).count();
 			return (float)nNanos / 1e9f;

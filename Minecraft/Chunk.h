@@ -13,7 +13,7 @@ class Chunk
 {
 private:
 	Engine::Array3D<Block> m_blocks{};
-	Engine::vu3d m_vBaseCoordinate{};
+	Engine::vi3d m_vBaseCoordinate{};
 	bool m_bDataLoaded   = false;
 	bool m_bMeshBuilt    = false;
 	bool m_bMeshUploaded = false;
@@ -27,7 +27,7 @@ public:
 public:
 	Chunk() noexcept = default;
 
-	Chunk(const Engine::vu3d baseCoordinate) noexcept
+	Chunk(const Engine::vi3d baseCoordinate) noexcept
 	{
 		m_vBaseCoordinate = baseCoordinate;
 		m_blocks = Engine::Array3D<Block>(Engine::vu3d(g_nChunkWidth, g_nChunkHeight, g_nChunkWidth));
@@ -75,6 +75,8 @@ public:
 
 	void buildMesh(const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
 	{
+		Engine::Timer timer = Engine::Timer().start();
+
 		m_vIndices.clear();
 		m_vVertices.clear();
 
@@ -123,12 +125,16 @@ public:
 		}
 
 		m_bMeshBuilt = true;
+
+		std::cout << timer.getElapsedTime() << "s\n";
 	}
 
 	void uploadData() noexcept
 	{
 		m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
 		m_indices  = Engine::IndexBuffer<uint32_t>(m_vIndices);
+		m_vVertices.reserve(0);
+		m_vIndices.reserve(0);
 		m_bMeshUploaded = true;
 	}
 
