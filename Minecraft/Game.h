@@ -3,7 +3,7 @@
 #include "Engine/GUIEngine.h"
 #include "Engine/Camera.h"
 #include "BlockShader.h"
-#include "Chunk.h"
+#include "World.h"
 #include "Engine/TextureAtlas.h"
 
 class Game : public Engine::GUIEngine
@@ -13,7 +13,7 @@ private:
 	Engine::TextureAtlas   textureAtlas;
 	Engine::Sprite3D       texture;
 	BlockShader            shader;
-	Chunk                  chunk;
+	World                 *world;
 
 public:
 	bool OnUserCreate() noexcept override
@@ -27,17 +27,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		for (int x = 0; x < 16; x++)
-			for (int z = 0; z < 16; z++)
-				for (int y = 0; y < 256; y++)
-					chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
-
-		Chunk c;
-		Engine::Timer timer = Engine::Timer().start();
-
-		chunk.buildMesh(c, c, c, c);
-
-		std::cout << timer.getElapsedTime() << std::endl;
+		world = new World(3, camera.getPosition());
 
 		return true;
 	}
@@ -69,11 +59,12 @@ public:
 			camera.update();
 		}
 
+		world->update(fElapsedTime);
+
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());
 		texture.bind();
-		chunk.m_vertices.bind();
-		chunk.m_indices.render();
+		world->render(shader);
 
 		//std::cout << (Engine::vf3d)camera.getPosition() << std::endl;
 

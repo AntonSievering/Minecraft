@@ -10,7 +10,7 @@ namespace Engine
 	{
 	private:
 		Array1D<T> m_array{};
-		vu2d m_size;
+		vu2d m_size{};
 
 	public:
 		Array2D() noexcept = default;
