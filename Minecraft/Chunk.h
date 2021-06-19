@@ -152,11 +152,13 @@ public:
 
 		m_bMeshBuilt = true;
 
-		std::cout << int(1000.0f * timer.getElapsedTime()) << "ms\n";
+		std::cout << "mesh: " << int(1000.0f * timer.getElapsedTime()) << "ms\n";
 	}
 
 	void uploadData() noexcept
 	{
+		Engine::Timer timer = Engine::Timer().start();
+
 		std::vector<Engine::MinecraftVertex> vTotalVertices;
 		std::vector<uint32_t> vTotalIndices;
 
@@ -169,6 +171,8 @@ public:
 		m_vertices = Engine::MinecraftVertexbuffer(vTotalVertices);
 		m_indices  = Engine::IndexBuffer<uint32_t>(vTotalIndices);
 		m_bMeshUploaded = true;
+
+		std::cout << "upload: " << timer.getElapsedTime() << '\n';
 	}
 
 	void renderOpaque(const BlockShader &shader) const noexcept
