@@ -5,6 +5,7 @@
 #include "BlockShader.h"
 #include "World.h"
 #include "Engine/TextureAtlas.h"
+#include "BlockHighlight.h"
 
 class Game : public Engine::GUIEngine
 {
@@ -13,6 +14,7 @@ private:
 	Engine::TextureAtlas   textureAtlas;
 	Engine::Sprite3D       texture;
 	BlockShader            shader;
+	BlockHighlight         highlight{};
 	World                 *world;
 
 public:
@@ -20,7 +22,10 @@ public:
 	{
 		camera = Engine::FloatingCamera(glm::radians(90.0f), (float)GetScreenSize().x, (float)GetScreenSize().y);
 		camera.setPosition(glm::vec3(8.0f, 0.0f, 8.0f));
+		
 		shader = BlockShader("content/shader/blockShader");
+
+		highlight = BlockHighlight("content/shader/lineShader");
 
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
 
@@ -28,7 +33,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		world = new World(1 , camera.getPosition());
+		world = new World(0, camera.getPosition());
 
 		return true;
 	}
@@ -68,8 +73,12 @@ public:
 		texture.bind();
 		world->render(shader);
 
-		//std::cout << (Engine::vf3d)camera.getPosition() << std::endl;
-
+		Engine::vi3d vSelected, vTargeted;
+		if (world->getSelectedBlock_DDA(camera, vSelected, vTargeted))
+		{
+			highlight.render(camera, vSelected);
+		}
+		
 		return true;
 	}
 

@@ -41,7 +41,7 @@ namespace Engine
 			return view;
 		}
 
-		glm::vec3 getPosition() const noexcept
+		Engine::vf3d getPosition() const noexcept
 		{
 			return position;
 		}

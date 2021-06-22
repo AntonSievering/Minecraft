@@ -22,8 +22,10 @@ private:
 
 public:
 	std::array<bool, 16> m_vLayersToLoad{};
-	std::array<std::vector<uint32_t>, 16> m_vIndices{};
-	std::array<std::vector<Engine::MinecraftVertex>, 16> m_vVertices{};
+	std::array<size_t, 16> m_vLayerVerticesOffset{};
+	std::array<size_t, 16> m_vLayerIndicesOffset{};
+	std::vector<uint32_t> m_vIndices{};
+	std::vector<Engine::MinecraftVertex> m_vVertices{};
 	Engine::MinecraftVertexbuffer m_vertices{};
 	Engine::IndexBuffer<uint32_t> m_indices{};
 
@@ -47,8 +49,8 @@ private:
 			return block.getId() == 0;
 		};
 
-		m_vVertices[layer].clear();
-		m_vIndices[layer].clear();
+		std::vector<Engine::MinecraftVertex> vVertices{};
+		std::vector<uint32_t> vIndices{};
 
 		for (uint32_t x = 0; x < g_nChunkWidth; x++)
 		{
@@ -63,31 +65,52 @@ private:
 					{
 						Block blockNorth = (x != 15) ? getBlock({ x + 1, y, z }) : north.getBlock({ 0, y, z });
 						if (faceNeeded(blockNorth))
-							FaceTemplate::FullBlock::fillNorth(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillNorth(vVertices, vIndices, coordinate, 0);
 
 						Block blockSouth = (x != 0) ? getBlock({ x - 1, y, z }) : south.getBlock({ 15, y, z });
 						if (faceNeeded(blockSouth))
-							FaceTemplate::FullBlock::fillSouth(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillSouth(vVertices, vIndices, coordinate, 0);
 
 						Block blockEast = (z != 15) ? getBlock({ x, y, z + 1 }) : east.getBlock({ x, y, 0 });
 						if (faceNeeded(blockEast))
-							FaceTemplate::FullBlock::fillEast(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillEast(vVertices, vIndices, coordinate, 0);
 
 						Block blockWest = (z != 0) ? getBlock({ x, y, z - 1 }) : west.getBlock({ x, y, 15 });
 						if (faceNeeded(blockWest))
-							FaceTemplate::FullBlock::fillWest(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, 0);
 
 						Block blockTop = (y != 255) ? getBlock({ x, y + 1, z }) : Block(0);
 						if (faceNeeded(blockTop))
-							FaceTemplate::FullBlock::fillTop(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillTop(vVertices, vIndices, coordinate, 0);
 
 						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(1, 0, 0);
 						if (faceNeeded(blockBottom))
-							FaceTemplate::FullBlock::fillBottom(m_vVertices[layer], m_vIndices[layer], coordinate, 0);
+							FaceTemplate::FullBlock::fillBottom(vVertices, vIndices, coordinate, 0);
 					}
 				}
 			}
 		}
+
+		size_t nVerticesStart = 0, nIndicesStart = 0;
+		for (int32_t i = 0; i < layer; i++)
+		{
+			nVerticesStart += m_vLayerVerticesOffset[i];
+			nIndicesStart += m_vLayerIndicesOffset[i];
+		}
+
+		size_t nVerticesEnd = nVerticesStart + m_vLayerVerticesOffset[layer];
+		size_t nIndicesEnd = nIndicesStart + m_vLayerIndicesOffset[layer];
+
+		if (nVerticesEnd != nVerticesStart)
+			m_vVertices.erase(m_vVertices.begin() + nVerticesStart, vVertices.begin() + nVerticesEnd);
+		if (nIndicesEnd != nIndicesStart)
+			m_vIndices.erase(m_vIndices.begin() + nIndicesStart, vIndices.begin() + nIndicesEnd);
+
+		m_vVertices.insert(m_vVertices.end(), vVertices.begin(), vVertices.end());
+		m_vIndices.insert(m_vIndices.end(), vIndices.begin(), vIndices.end());
+
+		m_vLayerVerticesOffset[layer] = vVertices.size();
+		m_vLayerIndicesOffset[layer] = vIndices.size();
 	}
 
 public:
@@ -151,32 +174,34 @@ public:
 	{
 		Engine::Timer timer = Engine::Timer().start();
 
-		std::vector<Engine::MinecraftVertex> vTotalVertices;
-		std::vector<uint32_t> vTotalIndices;
+		std::vector<uint32_t> vTotalIndices = m_vIndices;
 
+		size_t nCumulatedStart = 0;
 		for (uint16_t i = 0; i < 16; i++)
 		{
-			const uint32_t offset = vTotalVertices.size();
-			const size_t i0 = vTotalIndices.size();
-			vTotalVertices.insert(vTotalVertices.end(), m_vVertices[i].begin(), m_vVertices[i].end());
-			vTotalIndices.insert (vTotalIndices.end(),  m_vIndices[i].begin(),  m_vIndices[i].end());
+			nCumulatedStart += m_vLayerIndicesOffset[i];
+			const size_t offset = nCumulatedStart / 3 * 2;
+			const size_t end = (i != 15) ? nCumulatedStart + m_vLayerIndicesOffset[i + 1] : vTotalIndices.size() - 1;
 
-			for (size_t i = i0; i < vTotalIndices.size(); i++)
-				vTotalIndices.at(i) += offset;
+			for (size_t j = nCumulatedStart; j < end; j++)
+				vTotalIndices.at(j) += offset;
 		}
 
-		m_vertices = Engine::MinecraftVertexbuffer(vTotalVertices);
+		std::cout << "upload: " << int(1000.0f * timer.getElapsedTime()) << "ms\n";
+
+		m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
 		m_indices  = Engine::IndexBuffer<uint32_t>(vTotalIndices);
 		m_bMeshUploaded = true;
-
-		std::cout << "upload: " << int(1000.0f * timer.getElapsedTime()) << "ms\n";
 	}
 
 	void renderOpaque(const BlockShader &shader) const noexcept
 	{
-		shader.bind();
-		shader.setChunkBaseCoordinate(m_vBaseCoordinate);
-		m_vertices.bind();
-		m_indices.render();
+		if (m_vIndices.size() > 0 && m_indices.isValid())
+		{
+			shader.bind();
+			shader.setChunkBaseCoordinate(m_vBaseCoordinate);
+			m_vertices.bind();
+			m_indices.render();
+		}
 	}
 };

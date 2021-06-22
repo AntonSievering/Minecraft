@@ -79,3 +79,30 @@ namespace Engine
 	using vf3d = vec3d<float>;
 	using vd3d = vec3d<double>;
 }
+
+namespace std
+{
+	template <class T>
+	static constexpr inline Engine::vec3d<T> max(const Engine::vec3d<T> lhs, const T rhs) noexcept
+	{
+		return Engine::vec3d<T>(std::max(lhs.x, rhs), std::max(lhs.y, rhs), std::max(lhs.z, rhs));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> max(const Engine::vec3d<T> lhs, const Engine::vec3d<T> rhs) noexcept
+	{
+		return Engine::vec3d<T>(std::max(lhs.x, rhs.x), std::max(lhs.y, rhs.y), std::max(lhs.z, rhs.z));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> min(const Engine::vec3d<T> lhs, const T rhs) noexcept
+	{
+		return Engine::vec3d<T>(std::min(lhs.x, rhs), std::min(lhs.y, rhs), std::min(lhs.z, rhs));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> min(const Engine::vec3d<T> lhs, const Engine::vec3d<T> rhs) noexcept
+	{
+		return Engine::vec3d<T>(std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));
+	}
+}

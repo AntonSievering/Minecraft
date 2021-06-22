@@ -59,12 +59,12 @@ namespace Engine
 			return m_size.z;
 		}
 
-		T at(const size_t x, const size_t y, const size_t z) const noexcept
+		const T &at(const size_t x, const size_t y, const size_t z) const noexcept
 		{
 			return m_array[transform(x, y, z)];
 		}
 
-		T at(const vu3d index) const noexcept
+		const T &at(const vu3d index) const noexcept
 		{
 			return at(index.x, index.y, index.z);
 		}

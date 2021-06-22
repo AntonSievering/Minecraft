@@ -18,7 +18,7 @@ namespace Engine
 		public:
 			SharedResource() noexcept = default;
 			SharedResource(const GLuint id) noexcept { m_nBufferId = id; }
-			virtual ~SharedResource() noexcept { glDeleteBuffers(1, &m_nBufferId); }
+			virtual ~SharedResource() noexcept { if (m_nBufferId) glDeleteBuffers(1, &m_nBufferId); }
 		};
 
 	private:
@@ -26,7 +26,10 @@ namespace Engine
 		uint32_t                        m_nIndices = 0;
 
 	public:
-		IndexBuffer() noexcept = default;
+		IndexBuffer() noexcept
+		{
+			m_shrBuffer = std::make_shared<SharedResource>(SharedResource(0));
+		}
 
 		IndexBuffer(const T *data, uint32_t nIndices) noexcept
 		{
@@ -59,7 +62,7 @@ namespace Engine
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, getBufferId());
 		}
 
-		void render() const noexcept
+		void render(const GLenum mode = GL_TRIANGLES) const noexcept
 		{
 			GLenum type{};
 			if constexpr (std::is_same<T, uint32_t>::value) type = GL_UNSIGNED_INT;
@@ -67,7 +70,12 @@ namespace Engine
 			if constexpr (std::is_same<T, uint8_t>::value)  type = GL_UNSIGNED_BYTE;
 
 			bind();
-			glDrawElements(GL_TRIANGLES, m_nIndices, type, nullptr);
+			glDrawElements(mode, m_nIndices, type, nullptr);
+		}
+
+		bool isValid() const noexcept
+		{
+			return getBufferId() > 0;
 		}
 	};
 }

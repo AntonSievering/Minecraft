@@ -58,6 +58,7 @@ namespace Engine
 			bind();
 			glBindBuffer(GL_ARRAY_BUFFER, getBufferId());
 			glBufferData(GL_ARRAY_BUFFER, getVerticesCount() * sizeof(VertexType), pVertices, GL_STATIC_DRAW);
+			unbind();
 		}
 
 		void bind() const noexcept
@@ -98,6 +99,7 @@ namespace Engine
 			Base::m_nVertices = nVertices;
 			Base::genBuffer();
 			Base::setData(pVertices);
+			Base::bind();
 			createVertexAttribs();
 			Base::unbind();
 		}
@@ -141,6 +143,7 @@ namespace Engine
 			m_nVertices = nVertices;
 			genBuffer();
 			setData(pVertices);
+			bind();
 			createVertexAttribs();
 			unbind();
 		}
@@ -155,6 +158,7 @@ namespace Engine
 		}
 	};
 
-	using VertexbufferSprite3D = StandardVertexbuffer<Vertex3D, 3, 3, 2, 0, 0>;
-	using VertexbufferSprite2D = StandardVertexbuffer<Vertex2D, 2, 0, 2, 0, 0>;
+	using VertexbufferLine     = StandardVertexbuffer<LineVertex, 3, 0, 0, 0, 0>;
+	using VertexbufferSprite3D = StandardVertexbuffer<Vertex3D,   3, 3, 2, 0, 0>;
+	using VertexbufferSprite2D = StandardVertexbuffer<Vertex2D,   2, 0, 2, 0, 0>;
 }

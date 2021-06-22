@@ -9,7 +9,7 @@ class World
 {
 private:
 	Engine::Array2D<Chunk> m_chunks{};
-	size_t m_nInnerDiameter{}, m_nOuterDiameter{};
+	size_t m_nInnerDiameter{}, m_nOuterDiameter{}, m_nRadius;
 	std::vector<Engine::vu2d> m_vRenderPath1{}, m_vRenderPath2{}, m_vLoadPath{};
 	Engine::vi2d m_vChunkOffset{};
 	std::thread m_tUpdater;
@@ -20,6 +20,7 @@ public:
 
 	World(const size_t radius, const Engine::vf3d around) noexcept
 	{
+		m_nRadius = radius;
 		m_nInnerDiameter = 2 * radius + 1;
 		m_nOuterDiameter = m_nInnerDiameter + 2;
 		
@@ -56,20 +57,18 @@ private:
 	{
 		while (true)
 		{
-			for (size_t x = 1; x <= m_nInnerDiameter; x++)
+			for (const Engine::vu2d i : m_vLoadPath)
 			{
-				for (size_t z = 1; z <= m_nInnerDiameter; z++)
-				{
-					Chunk &chunk = m_chunks.at(x, z);
+				Chunk *chunk = &m_chunks.at(i);
 
-					if (!chunk.isDataLoaded())
-					{
-						for (int x = 0; x < 16; x++)
-							for (int z = 0; z < 16; z++)
-								for (int y = 0; y < 256; y++)
-									chunk.setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
-						chunk.setDataLoaded();
-					}
+				if (!chunk->isDataLoaded())
+				{
+					for (int x = 0; x < 16; x++)
+						for (int z = 0; z < 16; z++)
+							for (int y = 0; y < 256; y++)
+								chunk->setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
+						
+					chunk->setDataLoaded();
 				}
 			}
 
@@ -85,9 +84,9 @@ private:
 			{
 				for (size_t z = 1; z <= m_nInnerDiameter; z++)
 				{
-					Chunk &chunk = m_chunks.at(x, z);
+					Chunk *chunk = &m_chunks.at(x, z);
 
-					if (chunk.isDataLoaded() && !chunk.isMeshBuilt())
+					if (chunk->isDataLoaded() && !chunk->isMeshBuilt())
 					{
 						Chunk &north = m_chunks.at(x + 1, z);
 						Chunk &south = m_chunks.at(x - 1, z);
@@ -95,7 +94,7 @@ private:
 						Chunk &west  = m_chunks.at(x, z - 1);
 
 						if (north.isDataLoaded() && south.isDataLoaded() && east.isDataLoaded() && west.isDataLoaded())
-							chunk.buildMesh(north, south, east, west);
+							chunk->buildMesh(north, south, east, west);
 					}
 				}
 			}
@@ -110,39 +109,39 @@ private:
 		m_vRenderPath2.reserve(m_nInnerDiameter * m_nInnerDiameter);
 		m_vLoadPath.reserve(m_nOuterDiameter * m_nOuterDiameter);
 
-		auto spiralRound = [](std::vector<Engine::vu2d> &v, const uint32_t radius, const uint32_t offset) -> void
+		auto spiralRound = [](std::vector<Engine::vu2d> &v, const uint32_t radius, const uint32_t offset, const Engine::vu2d vOffset) -> void
 		{
 			if (radius == 0)
 			{
-				v.push_back(Engine::vu2d(offset, offset));
+				v.push_back(Engine::vu2d(offset, offset) + vOffset);
 				return;
 			}
 
 			// top row
 			for (uint32_t x = 0; x <= 2 * radius; x++)
-				v.push_back(Engine::vu2d(x + offset, offset));
+				v.push_back(Engine::vu2d(x + offset, offset) + vOffset);
 
 			// bottom row
 			for (uint32_t x = 0; x <= 2 * radius; x++)
-				v.push_back(Engine::vu2d(x + offset, 2 * radius + offset));
+				v.push_back(Engine::vu2d(x + offset, 2 * radius + offset) + vOffset);
 
 			// left column
 			for (uint32_t z = 1; z < 2 * radius; z++)
-				v.push_back(Engine::vu2d(offset, z + offset));
+				v.push_back(Engine::vu2d(offset, z + offset) + vOffset);
 
 			// right column
 			for (uint32_t z = 1; z < 2 * radius; z++)
-				v.push_back(Engine::vu2d(2 * radius + offset, z + offset));
+				v.push_back(Engine::vu2d(2 * radius + offset, z + offset) + vOffset);
 		};
 
-		auto circular = [spiralRound](std::vector<Engine::vu2d> &v, const uint32_t radius) -> void
+		auto circular = [spiralRound](std::vector<Engine::vu2d> &v, const uint32_t radius, const Engine::vu2d vOffset = Engine::vu2d(0, 0)) -> void
 		{
 			for (uint32_t offset = 0; offset <= radius; offset++)
-				spiralRound(v, offset, radius - offset);
+				spiralRound(v, offset, radius - offset, vOffset);
 		};
 
-		circular(m_vRenderPath1, (m_nInnerDiameter + 1) / 2);
-		circular(m_vLoadPath,   (m_nOuterDiameter + 1) / 2);
+		circular(m_vRenderPath1, m_nRadius, Engine::vu2d(1, 1));
+		circular(m_vLoadPath, m_nRadius + 1);
 
 		// reverse RenderPath1
 		for (std::size_t i = 0; i < m_vRenderPath1.size(); i++)
@@ -160,14 +159,44 @@ public:
 		return arraySpace - m_vChunkOffset;
 	}
 
-	Engine::vi2d worldToChunkSpace(const Engine::vf3d world) const noexcept
+	Engine::vi2d worldToChunkSpace(const Engine::vi3d world) const noexcept
 	{
-		return worldToChunkSpace(Engine::vf2d(world.x, world.z));
+		return worldToChunkSpace(world.xz());
 	}
 
-	Engine::vi2d worldToChunkSpace(const Engine::vf2d world) const noexcept
+	Engine::vi2d worldToChunkSpace(Engine::vi2d world) const noexcept
 	{
-		return Engine::vi2d(std::floorf(world.x / 16.0f), std::floorf(world.y / 16.0f));
+		if (world.x < 0) world.x = world.x - 15;
+		if (world.y < 0) world.y = world.y - 15;
+		return world / 16;
+	}
+
+	const Chunk &getChunkByArrayCoordinate(const Engine::vi2d arraySpace) const noexcept
+	{
+		return m_chunks.at(arraySpace);
+	}
+
+	const Chunk &getChunkByChunkCoordinate(const Engine::vi2d chunkSpace) const noexcept
+	{
+		const Engine::vi2d arraySpace = chunkToArraySpace(chunkSpace);
+		return getChunkByArrayCoordinate(arraySpace);
+	}
+
+	static Engine::vu3d getChunkOffset(Engine::vi3d coordinate) noexcept
+	{
+		if (coordinate.x < 0) coordinate.x = 16 + coordinate.x;
+		if (coordinate.z < 0) coordinate.z = 16 + coordinate.z;
+
+		return Engine::vu3d(coordinate.x % 16, coordinate.y, coordinate.z % 16);
+	}
+
+	Block getBlock(const Engine::vi3d coordinate) const noexcept
+	{
+		const Engine::vi2d chunkSpace = worldToChunkSpace(coordinate);
+		const Chunk &chunk = getChunkByChunkCoordinate(chunkSpace);
+		Block k = chunk.getBlock(getChunkOffset(coordinate));
+		
+		return k;
 	}
 
 	void update(const float fElapsedTime) noexcept
@@ -177,9 +206,9 @@ public:
 		{
 			for (size_t z = 0; z < m_nOuterDiameter; z++)
 			{
-				Chunk &chunk = m_chunks.at(x, z);
-				if (!chunk.isMeshUploaded() && chunk.isMeshBuilt())
-					chunk.uploadData();
+				Chunk *chunk = &m_chunks.at(x, z);
+				if (!chunk->isMeshUploaded() && chunk->isMeshBuilt())
+					chunk->uploadData();
 			}
 		}
 	}
@@ -187,10 +216,89 @@ public:
 	void render(const BlockShader &shader) noexcept
 	{
 		for (const Engine::vu2d &index : m_vRenderPath1)
+			m_chunks.at(index).renderOpaque(shader);
+	}
+
+	bool getSelectedBlock_DDA(const Engine::FPSCamera &camera, Engine::vi3d &selectedPos, Engine::vi3d &targetedPos) const noexcept
+	{
+		const Engine::vf3d vCameraPos = camera.getPosition();
+		const Engine::vf3d vCameraLookAt = camera.getLookAt();
+		
+		auto square = [](const float val) -> float { return val * val; };
+
+		const float sx = std::sqrtf(1.0f + square(vCameraLookAt.y / vCameraLookAt.x) + square(vCameraLookAt.z / vCameraLookAt.x));
+		const float sy = std::sqrtf(1.0f + square(vCameraLookAt.x / vCameraLookAt.y) + square(vCameraLookAt.z / vCameraLookAt.y));
+		const float sz = std::sqrtf(1.0f + square(vCameraLookAt.x / vCameraLookAt.z) + square(vCameraLookAt.y / vCameraLookAt.z));
+
+		int32_t mx{}, my{}, mz{};
+		Engine::vf3d vTest{};
+		selectedPos = (Engine::vi3d)vCameraPos;
+		
+		if (vCameraLookAt.x < 0.0f)
 		{
-			Chunk &chunk = m_chunks.at(index);
-			if (chunk.isMeshUploaded())
-				chunk.renderOpaque(shader);
+			mx = -1;
+			vTest.x = (vCameraPos.x - (float)selectedPos.x) * sx;
 		}
+		else
+		{
+			mx = 1;
+			vTest.x = ((float)(selectedPos.x + 1) - vCameraPos.x) * sx;
+		}
+
+		if (vCameraLookAt.y < 0.0f)
+		{
+			my = -1;
+			vTest.y = (vCameraPos.y - (float)selectedPos.y) * sy;
+		}
+		else
+		{
+			my = 1;
+			vTest.y = ((float)(selectedPos.y + 1) - vCameraPos.y) * sy;
+		}
+
+		if (vCameraLookAt.z < 0.0f)
+		{
+			mz = -1;
+			vTest.z = (vCameraPos.z - (float)selectedPos.z) * sz;
+		}
+		else
+		{
+			mz = 1;
+			vTest.z = ((float)(selectedPos.z + 1) - vCameraPos.z) * sz;
+		}
+
+		float fDistance = 0.0f;
+		while (fDistance < 4.0f)
+		{
+			if (vTest.x < vTest.y && vTest.x < vTest.z)
+			{
+				selectedPos.x += mx;
+				fDistance = vTest.x;
+				vTest.x += sx;
+			}
+			else if (vTest.y < vTest.x && vTest.y < vTest.z)
+			{
+				selectedPos.y += my;
+				fDistance = vTest.y;
+				vTest.y += sy;
+			}
+			else
+			{
+				selectedPos.z += mz;
+				fDistance = vTest.z;
+				vTest.z += sz;
+			}
+
+			if (selectedPos.y < 0 || selectedPos.y > 255)
+				return false;
+
+			if (getBlock(selectedPos).getId() > 0)
+			{
+				targetedPos = selectedPos + Engine::vi3d(mx, my, mz);
+				return true;
+			}
+		}
+
+		return false;
 	}
 };

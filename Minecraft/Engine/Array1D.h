@@ -4,95 +4,101 @@
 #include <memory>
 
 #ifdef _DEBUG
-#define _ARRAY_1D_DEBUG_
+	#define _ARRAY_1D_DEBUG_
+	#define _ARRAY_1D_NOEXCEPT_ _ARRAY_1D_NOEXCEPT_
+#else
+	#define _ARRAY_1D_NOEXCEPT_ noexcept
 #endif // _DEBUG
 
 #ifndef _ARRAY_1D_NO_ALLOCATION_CHECK_
-#define _ARRAY_1D_ALLOCATION_CHECK_
+	#define _ARRAY_1D_ALLOCATION_CHECK_
 #endif // _ARRAY_1D_NO_ALLOCATION_CHECK_
 
-template <class T>
-class Array1D
+namespace Engine
 {
-public:
-	struct out_of_memory
+	template <class T>
+	class Array1D
 	{
-		size_t nMissingBytes{};
-	};
+	public:
+		struct out_of_memory
+		{
+			size_t nMissingBytes{};
+		};
 
-	struct out_of_bounds
-	{
-		size_t nMaximum{};
-		size_t nGiven{};
-	};
+		struct out_of_bounds
+		{
+			size_t nMaximum{};
+			size_t nGiven{};
+		};
 
-private:
-	std::shared_ptr<T> m_pData = nullptr;
-	size_t             m_nSize = 0;
+	private:
+		std::shared_ptr<T> m_pData = nullptr;
+		size_t             m_nSize = 0;
 
-public:
-	Array1D() noexcept = default;
+	public:
+		Array1D() noexcept = default;
 
-	Array1D(const size_t nLength) noexcept(false)
-	{
-		m_pData = std::shared_ptr<T>(new T[nLength]{});
-		m_nSize = nLength;
+		Array1D(const size_t nLength) _ARRAY_1D_NOEXCEPT_
+		{
+			m_pData = std::shared_ptr<T>(new T[nLength]{});
+			m_nSize = nLength;
 
 #ifdef _ARRAY_1D_ALLOCATION_CHECK_
-		if (m_pData.get() == nullptr)
-			throw out_of_memory{ nLength * sizeof(T) };
+			if (m_pData.get() == nullptr)
+				throw out_of_memory{ nLength * sizeof(T) };
 #endif
-	}
+		}
 
-	Array1D(T *data, const size_t nLength) noexcept
-	{
-		m_pData = std::shared_ptr<T>(data);
-		m_nSize = nLength;
-	}
+		Array1D(T *data, const size_t nLength) noexcept
+		{
+			m_pData = std::shared_ptr<T>(data);
+			m_nSize = nLength;
+		}
 
-public:
-	T *data() noexcept
-	{
-		return m_pData.get();
-	}
+	public:
+		T *data() noexcept
+		{
+			return m_pData.get();
+		}
 
-	T *data() const noexcept
-	{
-		return m_pData.get();
-	}
+		T *data() const noexcept
+		{
+			return m_pData.get();
+		}
 
-	size_t size() const noexcept
-	{
-		return m_nSize;
-	}
+		size_t size() const noexcept
+		{
+			return m_nSize;
+		}
 
-	T &operator[](const size_t index) noexcept(false)
-	{
+		T &operator[](const size_t index) _ARRAY_1D_NOEXCEPT_
+		{
 #ifdef _ARRAY_1D_DEBUG_
-		if (index < m_nSize)
-			return data()[index];
-		throw out_of_bounds{ m_nSize, index };
+			if (index < m_nSize)
+				return data()[index];
+			throw out_of_bounds{ m_nSize, index };
 #endif
-		return data()[index];
-	}
+			return data()[index];
+		}
 
-	T &at(const size_t index) noexcept
-	{
-		return operator[](index);
-	}
+		T &at(const size_t index) noexcept
+		{
+			return operator[](index);
+		}
 
-	T operator[](const size_t index) const noexcept(false)
-	{
+		const T &operator[](const size_t index) const _ARRAY_1D_NOEXCEPT_
+		{
 #ifdef _ARRAY_1D_DEBUG_
-		if (index < m_nSize)
-			return data()[index];
-		throw out_of_bounds{ m_nSize, index };
+			if (index < m_nSize)
+				return data()[index];
+			throw out_of_bounds{ m_nSize, index };
 #endif
-		return data()[index];
-	}
+			return data()[index];
+		}
 
-	T at(const size_t index) const noexcept
-	{
-		return operator[](index);
-	}
-};
+		const T &at(const size_t index) const noexcept
+		{
+			return operator[](index);
+		}
+	};
+}

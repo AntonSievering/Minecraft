@@ -62,6 +62,11 @@ namespace Engine
 		float u, v;
 	};
 
+	struct LineVertex
+	{
+		vf3d pos;
+	};
+
 	struct Vertex3D
 	{
 		vf3d pos;
