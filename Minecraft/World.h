@@ -194,9 +194,8 @@ public:
 	{
 		const Engine::vi2d chunkSpace = worldToChunkSpace(coordinate);
 		const Chunk &chunk = getChunkByChunkCoordinate(chunkSpace);
-		Block k = chunk.getBlock(getChunkOffset(coordinate));
 		
-		return k;
+		return chunk.getBlock(getChunkOffset(coordinate));
 	}
 
 	void update(const float fElapsedTime) noexcept
@@ -289,7 +288,7 @@ public:
 				vTest.z += sz;
 			}
 
-			if (selectedPos.y < 0 || selectedPos.y > 255)
+			if ((selectedPos.y < 0 && my == -1) || (selectedPos.y > 255 && my == 1))
 				return false;
 
 			if (getBlock(selectedPos).getId() > 0)

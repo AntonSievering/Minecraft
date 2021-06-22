@@ -116,7 +116,9 @@ private:
 public:
 	Block getBlock(const Engine::vu3d index) const noexcept
 	{
-		return m_blocks.at(index);
+		if (index.x < g_nChunkWidth && index.y < g_nChunkHeight && index.z < g_nChunkWidth)
+			return m_blocks.at(index);
+		return Block();
 	}
 
 	void setBlock(const Engine::vu3d index, const Block block) noexcept
