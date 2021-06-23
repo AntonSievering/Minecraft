@@ -29,11 +29,6 @@ namespace Engine
 		constexpr inline T      dot(const vec3d &rhs)        const noexcept { return x * rhs.x + y * rhs.y + z * rhs.z; }
 		constexpr inline vec3d  cross(const vec3d &rhs)        const noexcept { return vec3d(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x); }
 
-		constexpr inline vec3d  abs()                          const noexcept { return vec3d(std::abs(x), std::abs(y), std::abs(z)); }
-		constexpr inline vec3d  floor()                        const noexcept { return vec3d(std::floor(x), std::floor(y), std::floor(z)); }
-		constexpr inline vec3d  ceil()                         const noexcept { return vec3d(std::ceil(x), std::ceil(y), std::ceil(z)); }
-		constexpr inline vec3d  inv()                          const noexcept { return vec3d(1.0f / x, 1.0f / y, 1.0f / z); }
-
 	public:
 		constexpr inline vec2d<T>  xy()                        const noexcept { return vec2d<T>(x, y); }
 		constexpr inline vec2d<T>  yz()                        const noexcept { return vec2d<T>(y, z); }
@@ -104,5 +99,11 @@ namespace std
 	static constexpr inline Engine::vec3d<T> min(const Engine::vec3d<T> lhs, const Engine::vec3d<T> rhs) noexcept
 	{
 		return Engine::vec3d<T>(std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y), std::min(lhs.z, rhs.z));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> floor(const Engine::vec3d<T> vec) noexcept
+	{
+		return Engine::vec3d<T>(std::floor(vec.x), std::floor(vec.y), std::floor(vec.z));
 	}
 }

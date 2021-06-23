@@ -33,7 +33,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		world = new World(0, camera.getPosition());
+		world = new World(20, camera.getPosition());
 
 		return true;
 	}
@@ -91,6 +91,8 @@ public:
 			}
 		}
 		
+		std::cout << vSelected << std::endl;
+
 		return true;
 	}
 

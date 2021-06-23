@@ -184,10 +184,10 @@ public:
 
 	static Engine::vu3d getChunkOffset(Engine::vi3d coordinate) noexcept
 	{
-		if (coordinate.x < 0) coordinate.x = 16 + coordinate.x;
-		if (coordinate.z < 0) coordinate.z = 16 + coordinate.z;
+		uint32_t x = (coordinate.x > 0) ? coordinate.x % 16 : 16 - (-coordinate.x % 16);
+		uint32_t z = (coordinate.z > 0) ? coordinate.z % 16 : 16 - (-coordinate.z % 16);
 
-		return Engine::vu3d(coordinate.x % 16, coordinate.y, coordinate.z % 16);
+		return Engine::vu3d(x, coordinate.y, z);
 	}
 
 	Block getBlock(const Engine::vi3d coordinate) const noexcept
@@ -241,13 +241,13 @@ public:
 		
 		auto square = [](const float val) -> float { return val * val; };
 
-		const float sx = std::sqrtf(1.0f + square(vCameraLookAt.y / vCameraLookAt.x) + square(vCameraLookAt.z / vCameraLookAt.x));
-		const float sy = std::sqrtf(1.0f + square(vCameraLookAt.x / vCameraLookAt.y) + square(vCameraLookAt.z / vCameraLookAt.y));
-		const float sz = std::sqrtf(1.0f + square(vCameraLookAt.x / vCameraLookAt.z) + square(vCameraLookAt.y / vCameraLookAt.z));
+		const float sx = std::abs(1.0f / vCameraLookAt.x);
+		const float sy = std::abs(1.0f / vCameraLookAt.y);
+		const float sz = std::abs(1.0f / vCameraLookAt.z);
 
 		int32_t mx{}, my{}, mz{};
 		Engine::vf3d vTest{};
-		selectedPos = (Engine::vi3d)vCameraPos;
+		selectedPos = (Engine::vi3d)(std::floor(vCameraPos));
 		
 		if (vCameraLookAt.x < 0.0f)
 		{
