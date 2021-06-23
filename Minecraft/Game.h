@@ -76,7 +76,19 @@ public:
 		Engine::vi3d vSelected, vTargeted;
 		if (world->getSelectedBlock_DDA(camera, vSelected, vTargeted))
 		{
-			highlight.render(camera, vSelected);
+			if (GetKey(Engine::Key::MOUSE_LEFT).bPressed)
+			{
+				world->setBlock_Update(vSelected, Block(0));
+			}
+			else if (GetKey(Engine::Key::MOUSE_RIGHT).bPressed)
+			{
+				world->setBlock_Update(vTargeted, Block(1, 0, 0));
+				highlight.render(camera, vTargeted);
+			}
+			else
+			{
+				highlight.render(camera, vSelected);
+			}
 		}
 		
 		return true;

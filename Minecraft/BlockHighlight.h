@@ -21,7 +21,7 @@ public:
 
 	BlockHighlight(const std::string &sFilename) noexcept
 	{
-		vHighlightVertices = Engine::VertexbufferLine(createVertices({ 8, 100, 8 }), 8);
+		vHighlightVertices = Engine::VertexbufferLine(createVertices(), 8);
 
 		uint32_t indices[24] = {
 			0, 4, 1, 5, 2, 6, 3, 7, // lines facing up
@@ -41,7 +41,7 @@ public:
 	}
 
 private:
-	static Engine::LineVertex *createVertices(const Engine::vf3d &coord)
+	static Engine::LineVertex *createVertices() noexcept
 	{
 		Engine::LineVertex vertices[8] = {
 			{ { 0.0f, 0.0f, 0.0f } },

@@ -5,7 +5,7 @@
 
 #ifdef _DEBUG
 	#define _ARRAY_1D_DEBUG_
-	#define _ARRAY_1D_NOEXCEPT_ _ARRAY_1D_NOEXCEPT_
+	#define _ARRAY_1D_NOEXCEPT_ noexcept(false)
 #else
 	#define _ARRAY_1D_NOEXCEPT_ noexcept
 #endif // _DEBUG

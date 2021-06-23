@@ -102,12 +102,12 @@ private:
 		size_t nIndicesEnd = nIndicesStart + m_vLayerIndicesOffset[layer];
 
 		if (nVerticesEnd != nVerticesStart)
-			m_vVertices.erase(m_vVertices.begin() + nVerticesStart, vVertices.begin() + nVerticesEnd);
+			m_vVertices.erase(m_vVertices.begin() + nVerticesStart, m_vVertices.begin() + nVerticesEnd);
 		if (nIndicesEnd != nIndicesStart)
-			m_vIndices.erase(m_vIndices.begin() + nIndicesStart, vIndices.begin() + nIndicesEnd);
+			m_vIndices.erase(m_vIndices.begin() + nIndicesStart, m_vIndices.begin() + nIndicesEnd);
 
-		m_vVertices.insert(m_vVertices.end(), vVertices.begin(), vVertices.end());
-		m_vIndices.insert(m_vIndices.end(), vIndices.begin(), vIndices.end());
+		m_vVertices.insert(m_vVertices.begin() + nVerticesStart, vVertices.begin(), vVertices.end());
+		m_vIndices.insert(m_vIndices.begin() + nIndicesStart, vIndices.begin(), vIndices.end());
 
 		m_vLayerVerticesOffset[layer] = vVertices.size();
 		m_vLayerIndicesOffset[layer] = vIndices.size();
@@ -123,7 +123,22 @@ public:
 
 	void setBlock(const Engine::vu3d index, const Block block) noexcept
 	{
-		m_blocks.at(index) = block;
+		if (index.x < g_nChunkWidth && index.y < g_nChunkHeight && index.z < g_nChunkWidth)
+			m_blocks.at(index) = block;
+	}
+
+	void updateLayer(const uint32_t y) noexcept
+	{
+		size_t cy = y / 16;
+		m_vLayersToLoad[cy] = true;
+
+		if (cy > 0 && y % 16 == 0)
+			m_vLayersToLoad[cy - 1] = true;
+		if (cy < 15 && y % 16 == 15)
+			m_vLayersToLoad[cy + 1] = true;
+
+		m_bMeshBuilt       = false;
+		m_bMeshUploaded    = false;
 	}
 
 	static bool indexExists(const Engine::vu3d index) noexcept

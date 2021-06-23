@@ -63,10 +63,10 @@ private:
 
 				if (!chunk->isDataLoaded())
 				{
-					for (int x = 0; x < 16; x++)
-						for (int z = 0; z < 16; z++)
-							for (int y = 0; y < 256; y++)
-								chunk->setBlock(Engine::vu3d(x, y, z), Block(rand() % 2, 0, 0));
+					for (int x = 1; x < 15; x++)
+						for (int z = 1; z < 15; z++)
+							for (int y = 0; y < 32; y++)
+								chunk->setBlock(Engine::vu3d(x, y, z), Block(1, 0, 0));
 						
 					chunk->setDataLoaded();
 				}
@@ -198,6 +198,22 @@ public:
 		return chunk.getBlock(getChunkOffset(coordinate));
 	}
 
+	void setBlock(const Engine::vi3d coordinate, const Block block) noexcept
+	{
+		const Engine::vi2d chunkSpace = worldToChunkSpace(coordinate);
+		const Engine::vi2d arraySpace = chunkToArraySpace(chunkSpace);
+		m_chunks.at(arraySpace).setBlock(getChunkOffset(coordinate), block);
+	}
+
+	void setBlock_Update(const Engine::vi3d coordinate, const Block block) noexcept
+	{
+		const Engine::vi2d vChunkSpace  = worldToChunkSpace(coordinate);
+		const Engine::vi2d vArraySpace  = chunkToArraySpace(vChunkSpace);
+		const Engine::vu3d vChunkOffset = getChunkOffset(coordinate);
+		m_chunks.at(vArraySpace).setBlock(vChunkOffset, block);
+		m_chunks.at(vArraySpace).updateLayer(coordinate.y);
+	}
+
 	void update(const float fElapsedTime) noexcept
 	{
 		// upload finished meshes
@@ -269,31 +285,58 @@ public:
 		float fDistance = 0.0f;
 		while (fDistance < 4.0f)
 		{
+			int axis;
 			if (vTest.x < vTest.y && vTest.x < vTest.z)
 			{
 				selectedPos.x += mx;
 				fDistance = vTest.x;
 				vTest.x += sx;
+				axis = 0;
 			}
 			else if (vTest.y < vTest.x && vTest.y < vTest.z)
 			{
 				selectedPos.y += my;
 				fDistance = vTest.y;
 				vTest.y += sy;
+				axis = 1;
 			}
 			else
 			{
 				selectedPos.z += mz;
 				fDistance = vTest.z;
 				vTest.z += sz;
+				axis = 2;
 			}
 
 			if ((selectedPos.y < 0 && my == -1) || (selectedPos.y > 255 && my == 1))
 				return false;
 
-			if (getBlock(selectedPos).getId() > 0)
+			if (getBlock(selectedPos).getId() > 0) 
 			{
-				targetedPos = selectedPos + Engine::vi3d(mx, my, mz);
+				targetedPos = selectedPos;
+
+				if (axis == 0)
+				{
+					if (vCameraPos.x < selectedPos.x)
+						targetedPos.x--;
+					else
+						targetedPos.x++;
+				}
+				else if (axis == 1)
+				{
+					if (vCameraPos.y < selectedPos.y)
+						targetedPos.y--;
+					else
+						targetedPos.y++;
+				}
+				else
+				{
+					if (vCameraPos.z < selectedPos.z)
+						targetedPos.z--;
+					else
+						targetedPos.z++;
+				}
+
 				return true;
 			}
 		}
