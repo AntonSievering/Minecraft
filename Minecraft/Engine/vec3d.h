@@ -106,4 +106,22 @@ namespace std
 	{
 		return Engine::vec3d<T>(std::floor(vec.x), std::floor(vec.y), std::floor(vec.z));
 	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> ceil(const Engine::vec3d<T> vec) noexcept
+	{
+		return Engine::vec3d<T>(std::ceil(vec.x), std::ceil(vec.y), std::ceil(vec.z));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> round(const Engine::vec3d<T> vec) noexcept
+	{
+		return Engine::vec3d<T>(std::round(vec.x), std::round(vec.y), std::round(vec.z));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec3d<T> abs(const Engine::vec3d<T> vec) noexcept
+	{
+		return Engine::vec3d<T>(std::abs(vec.x), std::abs(vec.y), std::abs(vec.z));
+	}
 }

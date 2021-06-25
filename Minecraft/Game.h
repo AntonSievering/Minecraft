@@ -90,8 +90,6 @@ public:
 				highlight.render(camera, vSelected);
 			}
 		}
-		
-		std::cout << vSelected << std::endl;
 
 		return true;
 	}

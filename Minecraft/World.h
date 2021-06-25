@@ -184,8 +184,8 @@ public:
 
 	static Engine::vu3d getChunkOffset(Engine::vi3d coordinate) noexcept
 	{
-		uint32_t x = (coordinate.x > 0) ? coordinate.x % 16 : 16 - (-coordinate.x % 16);
-		uint32_t z = (coordinate.z > 0) ? coordinate.z % 16 : 16 - (-coordinate.z % 16);
+		uint32_t x = (coordinate.x >= 0) ? coordinate.x % 16 : 16 - (-coordinate.x % 16);
+		uint32_t z = (coordinate.z >= 0) ? coordinate.z % 16 : 16 - (-coordinate.z % 16);
 
 		return Engine::vu3d(x, coordinate.y, z);
 	}
