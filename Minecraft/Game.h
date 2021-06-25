@@ -66,7 +66,7 @@ public:
 			camera.update();
 		}
 
-		world->update(fElapsedTime);
+		world->update(fElapsedTime, camera.getPosition());
 
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());

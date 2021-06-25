@@ -25,8 +25,7 @@ public:
 		m_nOuterDiameter = m_nInnerDiameter + 2;
 		
 		m_chunks = Engine::Array2D<Chunk>(Engine::vu2d(m_nOuterDiameter, m_nOuterDiameter));
-		Engine::vi2d vCenterChunkCoords = worldToChunkSpace(around);
-		m_vChunkOffset = Engine::vi2d(radius + 1, radius + 1) - vCenterChunkCoords;
+		setPlayerPos(around);
 
 		for (uint32_t x = 0; x < m_nOuterDiameter; x++)
 		{
@@ -148,6 +147,12 @@ private:
 			m_vRenderPath2.push_back(m_vRenderPath1.at(m_vRenderPath1.size() - 1 - i));
 	}
 
+	void setPlayerPos(const Engine::vf3d pos) noexcept
+	{
+		Engine::vi2d vCenterChunkCoords = worldToChunkSpace(pos);
+		m_vChunkOffset = Engine::vi2d(m_nRadius + 1, m_nRadius + 1) - vCenterChunkCoords;
+	}
+
 public:
 	Engine::vi2d chunkToArraySpace(const Engine::vi2d chunkSpace) const noexcept
 	{
@@ -184,8 +189,8 @@ public:
 
 	static Engine::vu3d getChunkOffset(Engine::vi3d coordinate) noexcept
 	{
-		uint32_t x = (coordinate.x >= 0) ? coordinate.x % 16 : 16 - (-coordinate.x % 16);
-		uint32_t z = (coordinate.z >= 0) ? coordinate.z % 16 : 16 - (-coordinate.z % 16);
+		uint32_t x = (coordinate.x >= 0) ? coordinate.x % 16 : (16 - (-coordinate.x % 16)) % 16;
+		uint32_t z = (coordinate.z >= 0) ? coordinate.z % 16 : (16 - (-coordinate.z % 16)) % 16;
 
 		return Engine::vu3d(x, coordinate.y, z);
 	}
@@ -212,9 +217,18 @@ public:
 		const Engine::vu3d vChunkOffset = getChunkOffset(coordinate);
 		m_chunks.at(vArraySpace).setBlock(vChunkOffset, block);
 		m_chunks.at(vArraySpace).updateLayer(coordinate.y);
+
+		if (vChunkOffset.x == 0 && vArraySpace.x > 0)
+			m_chunks.at(vArraySpace + Engine::vi2d(-1, 0)).updateLayer(coordinate.y);
+		if (vChunkOffset.x == 15 && vArraySpace.x < m_chunks.size().x - 1)
+			m_chunks.at(vArraySpace + Engine::vi2d(1, 0)).updateLayer(coordinate.y);
+		if (vChunkOffset.z == 0 && vArraySpace.y > 0)
+			m_chunks.at(vArraySpace + Engine::vi2d(0, -1)).updateLayer(coordinate.y);
+		if (vChunkOffset.z == 15 && vArraySpace.y < m_chunks.size().y - 1)
+			m_chunks.at(vArraySpace + Engine::vi2d(0, 1)).updateLayer(coordinate.y);
 	}
 
-	void update(const float fElapsedTime) noexcept
+	void update(const float fElapsedTime, const Engine::vf3d vPlayerPos) noexcept
 	{
 		// upload finished meshes
 		for (size_t x = 0; x < m_nOuterDiameter; x++)
@@ -226,6 +240,9 @@ public:
 					chunk->uploadData();
 			}
 		}
+
+		// update player pos
+		
 	}
 
 	void render(const BlockShader &shader) noexcept
