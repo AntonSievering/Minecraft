@@ -114,6 +114,11 @@ private:
 	}
 
 public:
+	Engine::vi3d getBaseCoordinate() const noexcept
+	{
+		return m_vBaseCoordinate;
+	}
+
 	Block getBlock(const Engine::vu3d index) const noexcept
 	{
 		if (index.x < g_nChunkWidth && index.y < g_nChunkHeight && index.z < g_nChunkWidth)
@@ -170,7 +175,6 @@ public:
 
 	void buildMesh(const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
 	{
-		Engine::Timer timer = Engine::Timer().start();
 		uint16_t nLayerCount = 0;
 
 		for (uint16_t i = 0; i < 16; i++)
@@ -183,32 +187,29 @@ public:
 		}
 
 		m_bMeshBuilt = true;
-
-		std::cout << "mesh: " << int(1000.0f * timer.getElapsedTime()) << "ms\n";
 	}
 
 	void uploadData() noexcept
 	{
-		Engine::Timer timer = Engine::Timer().start();
-
-		std::vector<uint32_t> vTotalIndices = m_vIndices;
-
-		size_t nCumulatedStart = 0;
-		for (uint16_t i = 0; i < 16; i++)
+		if (m_vIndices.size() > 0)
 		{
-			nCumulatedStart += m_vLayerIndicesOffset[i];
-			const size_t offset = nCumulatedStart / 3 * 2;
-			const size_t end = (i != 15) ? nCumulatedStart + m_vLayerIndicesOffset[i + 1] : vTotalIndices.size() - 1;
+			std::vector<uint32_t> vTotalIndices = m_vIndices;
 
-			for (size_t j = nCumulatedStart; j < end; j++)
-				vTotalIndices.at(j) += offset;
+			size_t nCumulatedStart = 0;
+			for (uint16_t i = 0; i < 16; i++)
+			{
+				nCumulatedStart += m_vLayerIndicesOffset[i];
+				const size_t offset = nCumulatedStart / 3 * 2;
+				const size_t end = (i != 15) ? nCumulatedStart + m_vLayerIndicesOffset[i + 1] : vTotalIndices.size() - 1;
+
+				for (size_t j = nCumulatedStart; j < end; j++)
+					vTotalIndices.at(j) += offset;
+			}
+
+			m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
+			m_indices = Engine::IndexBuffer<uint32_t>(vTotalIndices);
+			m_bMeshUploaded = true;
 		}
-
-		std::cout << "upload: " << int(1000.0f * timer.getElapsedTime()) << "ms\n";
-
-		m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
-		m_indices  = Engine::IndexBuffer<uint32_t>(vTotalIndices);
-		m_bMeshUploaded = true;
 	}
 
 	void renderOpaque(const BlockShader &shader) const noexcept

@@ -33,7 +33,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		world = new World(20, camera.getPosition());
+		world = new World(2, camera.getPosition());
 
 		return true;
 	}

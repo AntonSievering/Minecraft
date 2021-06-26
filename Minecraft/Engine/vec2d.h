@@ -58,6 +58,13 @@ namespace Engine
 	public:
 		template <class _T>
 		constexpr inline operator vec2d<_T>()                  const noexcept { return { static_cast<_T>(this->x), static_cast<_T>(this->y) }; }
+
+	public:
+		friend std::ostream &operator<<(std::ostream &os, const vec2d value) noexcept
+		{
+			os << value.x << " " << value.y;
+			return os;
+		}
 	};
 
 	using vi2d = vec2d<int32_t>;
