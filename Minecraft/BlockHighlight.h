@@ -1,5 +1,6 @@
 #pragma once
-#include "Engine/Shader.h"
+
+#include "LineShader.h"
 #include "Engine/VertexBuffer.h"
 #include "Engine/Camera.h"
 #include "Engine/IndexBuffer.h"
@@ -9,9 +10,7 @@ class BlockHighlight
 private:
 	Engine::VertexbufferLine vHighlightVertices{};
 	Engine::IndexBuffer<uint32_t> vHighlightIndices{};
-	Engine::Shader highlightShader{};
-	int m_nMvpLocation = -1,
-		m_nBaseCoordinateLocation = -1;
+	LineShader m_shader;
 
 public:
 	bool bDrawAllBoundingLines = false;
@@ -30,11 +29,8 @@ public:
 		};
 		vHighlightIndices = Engine::IndexBuffer<uint32_t>(indices, 24);
 
-		highlightShader = Engine::Shader(sFilename);
-		m_nMvpLocation            = highlightShader.getUniformLocation("u_modelViewProj");
-		m_nBaseCoordinateLocation = highlightShader.getUniformLocation("u_baseCoordinate");
-		glUniform4f(highlightShader.getUniformLocation("u_color"), 0.0f, 0.0f, 0.0f, 0.75f);
-
+		m_shader = LineShader(sFilename);
+		
 		glLineWidth(1.5f);
 		glEnable(GL_LINE_SMOOTH);
 		glDepthFunc(GL_LEQUAL);
@@ -64,9 +60,7 @@ public:
 		if (bDrawAllBoundingLines)
 			glDisable(GL_DEPTH_TEST);
 
-		highlightShader.bind();
-		glUniform3f(m_nBaseCoordinateLocation, coord.x, coord.y, coord.z);
-		glUniformMatrix4fv(m_nMvpLocation, 1, GL_FALSE, &camera.getViewProj()[0][0]);
+		m_shader.update(coord, camera.getViewProj());
 		vHighlightVertices.bind();
 		vHighlightIndices.render(GL_LINES);
 
