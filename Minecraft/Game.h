@@ -22,6 +22,7 @@ public:
 	{
 		camera = Engine::FloatingCamera(glm::radians(90.0f), (float)GetScreenSize().x, (float)GetScreenSize().y);
 		camera.setPosition(glm::vec3(8.0f, 0.0f, 8.0f));
+		camera.update();
 		
 		shader = BlockShader("content/shader/blockShader");
 
@@ -33,7 +34,7 @@ public:
 		textureAtlas.setSlice(0, image);
 		texture = textureAtlas.createTexture();
 
-		world = new World(2, camera.getPosition());
+		world = new World(16, camera.getPosition());
 
 		return true;
 	}
@@ -49,7 +50,7 @@ public:
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
-			const float fDist = 10.0f * fElapsedTime;
+			const float fDist = 1000.0f * fElapsedTime;
 			if (GetKey(Engine::Key::W).bHeld)
 				camera.moveFront(fDist);
 			if (GetKey(Engine::Key::S).bHeld)
@@ -90,7 +91,7 @@ public:
 				highlight.render(camera, vSelected);
 			}
 		}
-
+		
 		return true;
 	}
 

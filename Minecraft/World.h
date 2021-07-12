@@ -4,17 +4,19 @@
 #include "Engine/Array2D.h"
 #include "BlockShader.h"
 #include <thread>
+#include <mutex>
 
 class World
 {
 private:
-	Engine::Array2D<Chunk> m_chunks{};
+	Engine::Array2D<std::shared_ptr<Chunk>> m_chunks{};
 	size_t m_nInnerDiameter{}, m_nOuterDiameter{}, m_nRadius;
 	std::vector<Engine::vu2d> m_vRenderPath1{}, m_vRenderPath2{}, m_vLoadPath{};
 	Engine::vi2d m_vChunkOffset{};
 	Engine::vu2d m_vCenterArrayCoords{};
 	std::thread m_tUpdater;
 	std::thread m_tLoader;
+	std::mutex m_arrayMutex;
 
 public:
 	World() noexcept = default;
@@ -25,7 +27,7 @@ public:
 		m_nInnerDiameter = 2 * radius + 1;
 		m_nOuterDiameter = m_nInnerDiameter + 2;
 		
-		m_chunks = Engine::Array2D<Chunk>(Engine::vu2d(m_nOuterDiameter, m_nOuterDiameter));
+		m_chunks = Engine::Array2D<std::shared_ptr<Chunk>>(Engine::vu2d(m_nOuterDiameter, m_nOuterDiameter));
 		Engine::vi2d vCenterChunkCoords = worldToChunkSpace(around);
 		m_vChunkOffset = Engine::vi2d(m_nRadius + 1, m_nRadius + 1) - vCenterChunkCoords;
 		m_vCenterArrayCoords = Engine::vu2d(m_nRadius + 1, m_nRadius + 1);
@@ -37,7 +39,7 @@ public:
 		setupUpdatePath();
 
 		m_tUpdater = std::thread(&World::chunkMeshUpdater, this);
-		m_tLoader = std::thread(&World::chunkLoader, this);
+		m_tLoader  = std::thread(&World::chunkLoader,      this);
 	}
 
 	~World() noexcept
@@ -54,18 +56,27 @@ private:
 	{
 		while (true)
 		{
+		RESET_LOADING_LOOP:
 			for (const Engine::vu2d i : m_vLoadPath)
 			{
-				Chunk *chunk = &m_chunks.at(i);
-
+				std::shared_ptr<Chunk> chunk;
+				{
+					std::scoped_lock lock(m_arrayMutex);
+					chunk = m_chunks.at(i);
+				}
+				if (chunk == nullptr)
+					continue;
+				
 				if (!chunk->isDataLoaded())
 				{
-					for (int x = 1; x < 15; x++)
-						for (int z = 1; z < 15; z++)
-							for (int y = 0; y < std::max(std::abs(chunk->getBaseCoordinate().x), std::abs(chunk->getBaseCoordinate().z)); y++)
+					for (int x = 0; x < 16; x++)
+						for (int z = 0; z < 16; z++)
+							for (int y = 0; y < std::min(std::abs(chunk->getBaseCoordinate().x) / 16 * std::abs(chunk->getBaseCoordinate().z / 16), 255); y++)
 								chunk->setBlock(Engine::vu3d(x, y, z), Block(1, 0, 0));
-						
+					
 					chunk->setDataLoaded();
+
+					goto RESET_LOADING_LOOP;
 				}
 			}
 
@@ -77,22 +88,43 @@ private:
 	{
 		while (true)
 		{
-			for (size_t x = 1; x <= m_nInnerDiameter; x++)
+		RESTART_MESH_UPLOADING_LOOP:
+			for (const Engine::vu2d i : m_vRenderPath1)
 			{
-				for (size_t z = 1; z <= m_nInnerDiameter; z++)
+			RESTART_CURRENT_CHUNK_LOADING:
+				
+				std::shared_ptr<Chunk> chunk;
+				Engine::vi2d vCachedChunkOffset;
 				{
-					Chunk *chunk = &m_chunks.at(x, z);
+					std::scoped_lock lock(m_arrayMutex);
+					vCachedChunkOffset = m_vChunkOffset;
+					chunk = m_chunks.at(i);
+				}
 
-					if (chunk->isDataLoaded() && !chunk->isMeshBuilt())
+				if (chunk == nullptr)
+					continue;
+
+				if (chunk->isDataLoaded() && !chunk->isMeshBuilt())
+				{
+					std::shared_ptr<Chunk> north, south, east, west;
 					{
-						Chunk &north = m_chunks.at(x + 1, z);
-						Chunk &south = m_chunks.at(x - 1, z);
-						Chunk &east  = m_chunks.at(x, z + 1);
-						Chunk &west  = m_chunks.at(x, z - 1);
-
-						if (north.isDataLoaded() && south.isDataLoaded() && east.isDataLoaded() && west.isDataLoaded())
-							chunk->buildMesh(north, south, east, west);
+						std::scoped_lock lock(m_arrayMutex);
+						north = m_chunks.at(i.x + 1, i.y);
+						south = m_chunks.at(i.x - 1, i.y);
+						east = m_chunks.at(i.x, i.y + 1);
+						west = m_chunks.at(i.x, i.y - 1);
 					}
+
+					if (m_vChunkOffset != vCachedChunkOffset)
+						goto RESTART_CURRENT_CHUNK_LOADING;
+
+					if (north == nullptr || south == nullptr || east == nullptr || west == nullptr)
+						continue;
+
+					if (north->isDataLoaded() && south->isDataLoaded() && east->isDataLoaded() && west->isDataLoaded())
+						chunk->buildMesh(north.get(), south.get(), east.get(), west.get());
+
+					goto RESTART_MESH_UPLOADING_LOOP;
 				}
 			}
 
@@ -106,35 +138,33 @@ private:
 		m_vRenderPath2.reserve(m_nInnerDiameter * m_nInnerDiameter);
 		m_vLoadPath.reserve(m_nOuterDiameter * m_nOuterDiameter);
 
-		auto spiralRound = [](std::vector<Engine::vu2d> &v, const uint32_t radius, const uint32_t offset, const Engine::vu2d vOffset) -> void
+		Engine::vi2d mid = m_vCenterArrayCoords;
+
+		auto spiralRound = [mid](std::vector<Engine::vu2d> &v, const int radius, const Engine::vu2d vOffset) -> void
 		{
 			if (radius == 0)
 			{
-				v.push_back(Engine::vu2d(offset, offset) + vOffset);
+				v.push_back(mid);
 				return;
 			}
 
-			// top row
-			for (uint32_t x = 0; x <= 2 * radius; x++)
-				v.push_back(Engine::vu2d(x + offset, offset) + vOffset);
+			for (int ox = -radius; ox <= radius; ox++)
+			{
+				v.push_back(Engine::vu2d(mid.x + ox, mid.y - radius));
+				v.push_back(Engine::vu2d(mid.x + ox, mid.y + radius));
+			}
 
-			// bottom row
-			for (uint32_t x = 0; x <= 2 * radius; x++)
-				v.push_back(Engine::vu2d(x + offset, 2 * radius + offset) + vOffset);
-
-			// left column
-			for (uint32_t z = 1; z < 2 * radius; z++)
-				v.push_back(Engine::vu2d(offset, z + offset) + vOffset);
-
-			// right column
-			for (uint32_t z = 1; z < 2 * radius; z++)
-				v.push_back(Engine::vu2d(2 * radius + offset, z + offset) + vOffset);
+			for (int oy = -radius + 1; oy <= radius - 1; oy++)
+			{
+				v.push_back(Engine::vu2d(mid.x - radius, mid.y + oy));
+				v.push_back(Engine::vu2d(mid.x + radius, mid.y + oy));
+			}
 		};
 
 		auto circular = [spiralRound](std::vector<Engine::vu2d> &v, const uint32_t radius, const Engine::vu2d vOffset = Engine::vu2d(0, 0)) -> void
 		{
-			for (uint32_t offset = 0; offset <= radius; offset++)
-				spiralRound(v, offset, radius - offset, vOffset);
+			for (int offset = 0; offset <= radius; offset++)
+				spiralRound(v, offset, vOffset);
 		};
 
 		circular(m_vRenderPath1, m_nRadius, Engine::vu2d(1, 1));
@@ -148,7 +178,7 @@ private:
 	void createChunk(const Engine::vu2d arrayCoordinate) noexcept
 	{
 		Engine::vi2d a = arrayToChunkSpace(arrayCoordinate);
-		m_chunks.at(arrayCoordinate) = Chunk({ 16 * a.x, 0, 16 * a.y });
+		m_chunks.at(arrayCoordinate) = std::make_shared<Chunk>(Engine::vi3d(16 * a.x, 0, 16 * a.y));
 	}
 
 public:
@@ -174,12 +204,23 @@ public:
 		return world / 16;
 	}
 
-	const Chunk &getChunkByArrayCoordinate(const Engine::vi2d arraySpace) const noexcept
+	Chunk *getChunkByArrayCoordinate(const Engine::vi2d arraySpace) noexcept
 	{
-		return m_chunks.at(arraySpace);
+		return m_chunks.at(arraySpace).get();
 	}
 
-	const Chunk &getChunkByChunkCoordinate(const Engine::vi2d chunkSpace) const noexcept
+	const Chunk *getChunkByArrayCoordinate(const Engine::vi2d arraySpace) const noexcept
+	{
+		return m_chunks.at(arraySpace).get();
+	}
+
+	Chunk *getChunkByChunkCoordinate(const Engine::vi2d chunkSpace) noexcept
+	{
+		const Engine::vi2d arraySpace = chunkToArraySpace(chunkSpace);
+		return getChunkByArrayCoordinate(arraySpace);
+	}
+
+	const Chunk *getChunkByChunkCoordinate(const Engine::vi2d chunkSpace) const noexcept
 	{
 		const Engine::vi2d arraySpace = chunkToArraySpace(chunkSpace);
 		return getChunkByArrayCoordinate(arraySpace);
@@ -196,16 +237,15 @@ public:
 	Block getBlock(const Engine::vi3d coordinate) const noexcept
 	{
 		const Engine::vi2d chunkSpace = worldToChunkSpace(coordinate);
-		const Chunk &chunk = getChunkByChunkCoordinate(chunkSpace);
+		const Chunk *chunk = getChunkByChunkCoordinate(chunkSpace);
 		
-		return chunk.getBlock(getChunkOffset(coordinate));
+		return chunk->getBlock(getChunkOffset(coordinate));
 	}
 
 	void setBlock(const Engine::vi3d coordinate, const Block block) noexcept
 	{
 		const Engine::vi2d chunkSpace = worldToChunkSpace(coordinate);
-		const Engine::vi2d arraySpace = chunkToArraySpace(chunkSpace);
-		m_chunks.at(arraySpace).setBlock(getChunkOffset(coordinate), block);
+		getChunkByChunkCoordinate(chunkSpace)->setBlock(getChunkOffset(coordinate), block);
 	}
 
 	void setBlock_Update(const Engine::vi3d coordinate, const Block block) noexcept
@@ -213,17 +253,17 @@ public:
 		const Engine::vi2d vChunkSpace  = worldToChunkSpace(coordinate);
 		const Engine::vi2d vArraySpace  = chunkToArraySpace(vChunkSpace);
 		const Engine::vu3d vChunkOffset = getChunkOffset(coordinate);
-		m_chunks.at(vArraySpace).setBlock(vChunkOffset, block);
-		m_chunks.at(vArraySpace).updateLayer(coordinate.y);
+		getChunkByArrayCoordinate(vArraySpace)->setBlock(vChunkOffset, block);
+		getChunkByArrayCoordinate(vArraySpace)->updateLayer(coordinate.y);
 
 		if (vChunkOffset.x == 0 && vArraySpace.x > 0)
-			m_chunks.at(vArraySpace + Engine::vi2d(-1, 0)).updateLayer(coordinate.y);
+			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(-1, 0))->updateLayer(coordinate.y);
 		if (vChunkOffset.x == 15 && vArraySpace.x < m_chunks.size().x - 1)
-			m_chunks.at(vArraySpace + Engine::vi2d(1, 0)).updateLayer(coordinate.y);
+			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(1, 0))->updateLayer(coordinate.y);
 		if (vChunkOffset.z == 0 && vArraySpace.y > 0)
-			m_chunks.at(vArraySpace + Engine::vi2d(0, -1)).updateLayer(coordinate.y);
+			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(0, -1))->updateLayer(coordinate.y);
 		if (vChunkOffset.z == 15 && vArraySpace.y < m_chunks.size().y - 1)
-			m_chunks.at(vArraySpace + Engine::vi2d(0, 1)).updateLayer(coordinate.y);
+			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(0, 1))->updateLayer(coordinate.y);
 	}
 
 	void update(const float fElapsedTime, const Engine::vf3d vPlayerPos) noexcept
@@ -233,7 +273,7 @@ public:
 		{
 			for (size_t z = 0; z < m_nOuterDiameter; z++)
 			{
-				Chunk *chunk = &m_chunks.at(x, z);
+				Chunk *chunk = getChunkByArrayCoordinate(Engine::vi2d(x, z));
 				if (!chunk->isMeshUploaded() && chunk->isMeshBuilt())
 					chunk->uploadData();
 			}
@@ -247,6 +287,11 @@ public:
 			Engine::vi2d offset = (Engine::vi2d)vCurrentChunkArrayCoord - (Engine::vi2d)m_vCenterArrayCoords;
 			m_vChunkOffset -= offset;
 
+			offset.x = std::clamp(offset.x, -(int32_t)m_chunks.size().x, (int32_t)m_chunks.size().x);
+			offset.y = std::clamp(offset.y, -(int32_t)m_chunks.size().y, (int32_t)m_chunks.size().y);
+			
+			std::scoped_lock lock(m_arrayMutex);
+
 			if (offset.x > 0)
 			{
 				for (int32_t z = 0; z < m_chunks.size().y; z++)
@@ -255,7 +300,7 @@ public:
 						m_chunks.at(Engine::vu2d(x, z)) = m_chunks.at(Engine::vu2d(x + offset.x, z));
 
 					for (int32_t x = m_chunks.size().x - offset.x; x < m_chunks.size().x; x++)
-						createChunk(Engine::vu2d(x, z));
+						m_chunks.at(x, z) = nullptr;
 				}
 			}
 			else if (offset.x < 0)
@@ -268,7 +313,7 @@ public:
 						m_chunks.at(Engine::vu2d(x, z)) = m_chunks.at(Engine::vu2d(x - offset.x, z));
 				
 					for (int32_t x = offset.x - 1; x >= 0; x--)
-						createChunk(Engine::vu2d(x, z));
+						m_chunks.at(x, z) = nullptr;
 				}
 			}
 
@@ -280,7 +325,7 @@ public:
 						m_chunks.at(Engine::vu2d(x, z)) = m_chunks.at(Engine::vu2d(x, z + offset.y));
 
 					for (int32_t z = m_chunks.size().y - offset.y; z < m_chunks.size().y; z++)
-						createChunk(Engine::vu2d(x, z));
+						m_chunks.at(x, z) = nullptr;
 				}
 			}
 			else if (offset.y < 0)
@@ -293,16 +338,21 @@ public:
 						m_chunks.at(Engine::vu2d(x, z)) = m_chunks.at(Engine::vu2d(x, z - offset.y));
 
 					for (int32_t z = offset.y - 1; z >= 0; z--)
-						createChunk(Engine::vu2d(x, z));
+						m_chunks.at(x, z) = nullptr;
 				}
 			}
+
+			for (uint32_t x = 0; x < m_chunks.size().x; x++)
+				for (uint32_t y = 0; y < m_chunks.size().y; y++)
+					if (m_chunks.at({ x, y }) == nullptr)
+						createChunk({ x, y });
 		}
 	}
 
 	void render(const BlockShader &shader) noexcept
 	{
 		for (const Engine::vu2d &index : m_vRenderPath1)
-			m_chunks.at(index).renderOpaque(shader);
+			getChunkByArrayCoordinate(index)->renderOpaque(shader);
 	}
 
 	bool getSelectedBlock_DDA(const Engine::FPSCamera &camera, Engine::vi3d &selectedPos, Engine::vi3d &targetedPos) const noexcept

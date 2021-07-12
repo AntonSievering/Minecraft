@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <array>
 #include <vector>
+#include <thread>
 #include "Engine/Array3D.h"
 #include "Block.h"
 #include "Engine/VertexBuffer.h"
@@ -17,7 +18,6 @@ private:
 	Engine::Array3D<Block> m_blocks{};
 	Engine::vi3d m_vBaseCoordinate{};
 	bool m_bDataLoaded   = false;
-	bool m_bMeshBuilt    = false;
 	bool m_bMeshUploaded = false;
 
 public:
@@ -42,7 +42,7 @@ public:
 	}
 
 private:
-	void buildLayer(const uint16_t layer, const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
+	void buildLayer(const uint16_t layer, const Chunk *north, const Chunk *south, const Chunk *east, const Chunk *west) noexcept
 	{
 		auto faceNeeded = [](const Block block) -> bool
 		{
@@ -63,19 +63,19 @@ private:
 
 					if (nBlockId > 0)
 					{
-						Block blockNorth = (x != 15) ? getBlock({ x + 1, y, z }) : north.getBlock({ 0, y, z });
+						Block blockNorth = (x != 15) ? getBlock({ x + 1, y, z }) : north->getBlock({ 0, y, z });
 						if (faceNeeded(blockNorth))
 							FaceTemplate::FullBlock::fillNorth(vVertices, vIndices, coordinate, 0);
 
-						Block blockSouth = (x != 0) ? getBlock({ x - 1, y, z }) : south.getBlock({ 15, y, z });
+						Block blockSouth = (x != 0) ? getBlock({ x - 1, y, z }) : south->getBlock({ 15, y, z });
 						if (faceNeeded(blockSouth))
 							FaceTemplate::FullBlock::fillSouth(vVertices, vIndices, coordinate, 0);
 
-						Block blockEast = (z != 15) ? getBlock({ x, y, z + 1 }) : east.getBlock({ x, y, 0 });
+						Block blockEast = (z != 15) ? getBlock({ x, y, z + 1 }) : east->getBlock({ x, y, 0 });
 						if (faceNeeded(blockEast))
 							FaceTemplate::FullBlock::fillEast(vVertices, vIndices, coordinate, 0);
 
-						Block blockWest = (z != 0) ? getBlock({ x, y, z - 1 }) : west.getBlock({ x, y, 15 });
+						Block blockWest = (z != 0) ? getBlock({ x, y, z - 1 }) : west->getBlock({ x, y, 15 });
 						if (faceNeeded(blockWest))
 							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, 0);
 
@@ -106,8 +106,10 @@ private:
 		if (nIndicesEnd != nIndicesStart)
 			m_vIndices.erase(m_vIndices.begin() + nIndicesStart, m_vIndices.begin() + nIndicesEnd);
 
-		m_vVertices.insert(m_vVertices.begin() + nVerticesStart, vVertices.begin(), vVertices.end());
-		m_vIndices.insert(m_vIndices.begin() + nIndicesStart, vIndices.begin(), vIndices.end());
+		if (vVertices.size() > 0)
+			m_vVertices.insert(m_vVertices.begin() + nVerticesStart, vVertices.begin(), vVertices.end());
+		if (vIndices.size() > 0)
+			m_vIndices.insert(m_vIndices.begin() + nIndicesStart, vIndices.begin(), vIndices.end());
 
 		m_vLayerVerticesOffset[layer] = vVertices.size();
 		m_vLayerIndicesOffset[layer] = vIndices.size();
@@ -142,7 +144,6 @@ public:
 		if (cy < 15 && y % 16 == 15)
 			m_vLayersToLoad[cy + 1] = true;
 
-		m_bMeshBuilt       = false;
 		m_bMeshUploaded    = false;
 	}
 
@@ -165,7 +166,11 @@ public:
 
 	bool isMeshBuilt() const noexcept
 	{
-		return m_bMeshBuilt;
+		for (int i = 0; i < 16; i++)
+			if (m_vLayersToLoad.at(i))
+				return false;
+
+		return true;
 	}
 
 	bool isMeshUploaded() const noexcept
@@ -173,7 +178,7 @@ public:
 		return m_bMeshUploaded;
 	}
 
-	void buildMesh(const Chunk &north, const Chunk &south, const Chunk &east, const Chunk &west) noexcept
+	void buildMesh(const Chunk *north, const Chunk *south, const Chunk *east, const Chunk *west) noexcept
 	{
 		uint16_t nLayerCount = 0;
 
@@ -185,16 +190,14 @@ public:
 				m_vLayersToLoad[i] = false;
 			}
 		}
-
-		m_bMeshBuilt = true;
 	}
 
 	void uploadData() noexcept
 	{
+		std::vector<uint32_t> vTotalIndices = m_vIndices;
+
 		if (m_vIndices.size() > 0)
 		{
-			std::vector<uint32_t> vTotalIndices = m_vIndices;
-
 			size_t nCumulatedStart = 0;
 			for (uint16_t i = 0; i < 16; i++)
 			{
@@ -204,12 +207,12 @@ public:
 
 				for (size_t j = nCumulatedStart; j < end; j++)
 					vTotalIndices.at(j) += offset;
-			}
-
-			m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
-			m_indices = Engine::IndexBuffer<uint32_t>(vTotalIndices);
-			m_bMeshUploaded = true;
+			}	
 		}
+
+		m_vertices = Engine::MinecraftVertexbuffer(m_vVertices);
+		m_indices = Engine::IndexBuffer<uint32_t>(vTotalIndices);
+		m_bMeshUploaded = true;
 	}
 
 	void renderOpaque(const BlockShader &shader) const noexcept
