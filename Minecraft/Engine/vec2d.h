@@ -59,16 +59,66 @@ namespace Engine
 		template <class _T>
 		constexpr inline operator vec2d<_T>()                  const noexcept { return { static_cast<_T>(this->x), static_cast<_T>(this->y) }; }
 
+#ifndef NO_OSTREAM_OVERLOAD
 	public:
 		friend std::ostream &operator<<(std::ostream &os, const vec2d value) noexcept
 		{
 			os << value.x << " " << value.y;
 			return os;
 		}
+#endif // NO_OSTREAM_OVERLOAD
 	};
 
 	using vi2d = vec2d<int32_t>;
 	using vu2d = vec2d<uint32_t>;
 	using vf2d = vec2d<float>;
 	using vd2d = vec2d<double>;
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> max(const Engine::vec2d<T> lhs, const T rhs) noexcept
+	{
+		return Engine::vec2d<T>(std::max(lhs.x, rhs), std::max(lhs.x, rhs));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> max(const Engine::vec2d<T> lhs, const Engine::vec2d<T> rhs) noexcept
+	{
+		return Engine::vec2d<T>(std::max(lhs.x, rhs.x), std::max(lhs.y, rhs.y));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> min(const Engine::vec2d<T> lhs, const T rhs) noexcept
+	{
+		return Engine::vec2d<T>(std::min(lhs.x, rhs), std::min(lhs.y, rhs));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> min(const Engine::vec2d<T> lhs, const Engine::vec2d<T> rhs) noexcept
+	{
+		return Engine::vec2d<T>(std::min(lhs.x, rhs.x), std::min(lhs.y, rhs.y));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> floor(const Engine::vec2d<T> vec) noexcept
+	{
+		return Engine::vec2d<T>(std::floor(vec.x), std::floor(vec.y));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> ceil(const Engine::vec2d<T> vec) noexcept
+	{
+		return Engine::vec2d<T>(std::ceil(vec.x), std::ceil(vec.y));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> round(const Engine::vec2d<T> vec) noexcept
+	{
+		return Engine::vec2d<T>(std::round(vec.x), std::round(vec.y));
+	}
+
+	template <class T>
+	static constexpr inline Engine::vec2d<T> abs(const Engine::vec2d<T> vec) noexcept
+	{
+		return Engine::vec2d<T>(std::abs(vec.x), std::abs(vec.y));
+	}
 }

@@ -16,7 +16,8 @@ namespace Engine
 
 	public:
 		constexpr inline vec3d()                                     noexcept { x = T(); y = T(); z = T(); }
-		constexpr inline vec3d(const T _x, const T _y, const T _z)   noexcept { x = _x;  y = _y;  z = _z;  }
+		constexpr inline vec3d(const T _x, const T _y, const T _z)   noexcept { x =  _x; y =  _y; z =  _z; }
+		constexpr inline vec3d(const T xyz)                          noexcept { x = xyz; y = xyz; z = xyz; }
 		constexpr inline vec3d(const glm::vec3 &v)                   noexcept { x = v.x; y = v.y; z = v.z; }
 
 	public:
@@ -60,12 +61,14 @@ namespace Engine
 		constexpr inline operator vec3d<_T>()                  const noexcept { return { static_cast<_T>(this->x), static_cast<_T>(this->y), static_cast<_T>(this->z) }; }
 		constexpr inline operator glm::vec3()                  const noexcept { return glm::vec3(x, y, z); }
 
+#ifndef NO_OSTREAM_OVERLOAD
 	public:
 		friend std::ostream &operator<<(std::ostream &os, const vec3d value) noexcept
 		{
 			os << value.x << " " << value.y << " " << value.z;
 			return os;
 		}
+#endif // NO_OSTREAM_OVERLOAD
 	};
 
 	using vs3d = vec3d<short>;
