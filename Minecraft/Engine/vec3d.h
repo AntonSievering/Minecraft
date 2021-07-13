@@ -15,9 +15,9 @@ namespace Engine
 		T z = T();
 
 	public:
-		inline vec3d()                                               noexcept { x = T(); y = T(); z = T(); }
-		inline vec3d(const T _x, const T _y, const T _z)             noexcept { x = _x;  y = _y;  z = _z; }
-		inline vec3d(const glm::vec3 &v)                             noexcept { x = v.x; y = v.y; z = v.z; }
+		constexpr inline vec3d()                                     noexcept { x = T(); y = T(); z = T(); }
+		constexpr inline vec3d(const T _x, const T _y, const T _z)   noexcept { x = _x;  y = _y;  z = _z;  }
+		constexpr inline vec3d(const glm::vec3 &v)                   noexcept { x = v.x; y = v.y; z = v.z; }
 
 	public:
 		constexpr inline T      mag()                          const noexcept { return std::sqrt(x * x + y * y + z * z); }
@@ -26,7 +26,7 @@ namespace Engine
 		constexpr inline vec3d  norm()                         const noexcept { T r = T(1) / mag(); return vec3d(x * r, y * r, z * r); }
 		constexpr inline vec3d  normalize()                          noexcept { T r = T(1) / mag(); x *= r; y *= r; z *= r; return *this; }
 
-		constexpr inline T      dot(const vec3d &rhs)        const noexcept { return x * rhs.x + y * rhs.y + z * rhs.z; }
+		constexpr inline T      dot(const vec3d &rhs)          const noexcept { return x * rhs.x + y * rhs.y + z * rhs.z; }
 		constexpr inline vec3d  cross(const vec3d &rhs)        const noexcept { return vec3d(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x); }
 
 	public:
@@ -37,15 +37,15 @@ namespace Engine
 	public:
 		constexpr inline vec3d  operator +  (const vec3d &rhs) const noexcept { return vec3d(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z); }
 		constexpr inline vec3d  operator -  (const vec3d &rhs) const noexcept { return vec3d(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z); }
-		constexpr inline vec3d  operator *  (const T &rhs) const noexcept { return vec3d(this->x * rhs, this->y * rhs, this->z * rhs); }
+		constexpr inline vec3d  operator *  (const T     &rhs) const noexcept { return vec3d(this->x * rhs, this->y * rhs, this->z * rhs); }
 		constexpr inline vec3d  operator *  (const vec3d &rhs) const noexcept { return vec3d(this->x * rhs.x, this->y * rhs.y, this->z * rhs.z); }
-		constexpr inline vec3d  operator /  (const T &rhs) const noexcept { return vec3d(this->x / rhs, this->y / rhs, this->z / rhs); }
+		constexpr inline vec3d  operator /  (const T     &rhs) const noexcept { return vec3d(this->x / rhs, this->y / rhs, this->z / rhs); }
 		constexpr inline vec3d  operator /  (const vec3d &rhs) const noexcept { return vec3d(this->x / rhs.x, this->y / rhs.y, this->z / rhs.z); }
 
 		constexpr inline vec3d &operator += (const vec3d &rhs)       noexcept { this->x += rhs.x; this->y += rhs.y; this->z += rhs.z; return *this; }
 		constexpr inline vec3d &operator -= (const vec3d &rhs)       noexcept { this->x -= rhs.x; this->y -= rhs.y; this->z -= rhs.z; return *this; }
-		constexpr inline vec3d &operator *= (const T &rhs)       noexcept { this->x *= rhs;   this->y *= rhs;   this->z *= rhs;   return *this; }
-		constexpr inline vec3d &operator /= (const T &rhs)       noexcept { this->x /= rhs;   this->y /= rhs;   this->z /= rhs;   return *this; }
+		constexpr inline vec3d &operator *= (const T     &rhs)       noexcept { this->x *= rhs;   this->y *= rhs;   this->z *= rhs;   return *this; }
+		constexpr inline vec3d &operator /= (const T     &rhs)       noexcept { this->x /= rhs;   this->y /= rhs;   this->z /= rhs;   return *this; }
 
 	public:
 		constexpr inline bool   operator == (const vec3d &rhs) const noexcept { return rhs.x == x && rhs.y == y && rhs.z == z; }

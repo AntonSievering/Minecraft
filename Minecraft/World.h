@@ -286,9 +286,6 @@ public:
 		{
 			Engine::vi2d offset = (Engine::vi2d)vCurrentChunkArrayCoord - (Engine::vi2d)m_vCenterArrayCoords;
 			m_vChunkOffset -= offset;
-
-			offset.x = std::clamp(offset.x, -(int32_t)m_chunks.size().x, (int32_t)m_chunks.size().x);
-			offset.y = std::clamp(offset.y, -(int32_t)m_chunks.size().y, (int32_t)m_chunks.size().y);
 			
 			std::scoped_lock lock(m_arrayMutex);
 

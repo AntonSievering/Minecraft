@@ -50,7 +50,7 @@ public:
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
-			const float fDist = 10.0f * fElapsedTime;
+			const float fDist = 1000.0f * fElapsedTime;
 			if (GetKey(Engine::Key::W).bHeld)
 				camera.moveFront(fDist);
 			if (GetKey(Engine::Key::S).bHeld)

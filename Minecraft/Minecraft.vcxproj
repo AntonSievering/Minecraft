@@ -215,6 +215,7 @@
     <ClInclude Include="Engine\VertexBuffer.h" />
     <ClInclude Include="FaceTemplate.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Hitbox.h" />
     <ClInclude Include="LineShader.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
