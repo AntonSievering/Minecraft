@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Chunk.h"
+#include "Hitbox.h"
+#include "CollisionSystem.h"
 #include "Engine/Array2D.h"
 #include "BlockShader.h"
 #include <thread>
@@ -72,7 +74,7 @@ private:
 					for (int x = 0; x < 16; x++)
 						for (int z = 0; z < 16; z++)
 							for (int y = 0; y < std::min(std::abs(chunk->getBaseCoordinate().x) / 16 * std::abs(chunk->getBaseCoordinate().z / 16), 255); y++)
-								chunk->setBlock(Engine::vu3d(x, y, z), Block(1, 0, 0));
+								chunk->setBlock(Engine::vu3d(x, y, z), Block(BlockId::STONE));
 					
 					chunk->setDataLoaded();
 
@@ -266,7 +268,7 @@ public:
 			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(0, 1))->updateLayer(coordinate.y);
 	}
 
-	void update(const float fElapsedTime, const Engine::vf3d vPlayerPos) noexcept
+	void update(const float fElapsedTime, Engine::vf3d &vPlayerPos) noexcept
 	{
 		// upload finished meshes
 		for (size_t x = 0; x < m_nOuterDiameter; x++)
@@ -278,6 +280,12 @@ public:
 					chunk->uploadData();
 			}
 		}
+
+		// player collision
+		constexpr Engine::vf3d vPlayerSize = Engine::vf3d(0.7f, 1.8f, 0.7f);
+		constexpr Engine::vf3d vPlayerFeetEyeOffset = Engine::vf3d(0.5f * vPlayerSize.x, vPlayerSize.y, 0.5f * vPlayerSize.z);
+		aabb::Hitbox3d hitbox = aabb::Hitbox3d(vPlayerPos - vPlayerFeetEyeOffset, vPlayerSize);
+		collideHitbox(hitbox);
 
 		// update player pos
 		Engine::vu2d vCurrentChunkArrayCoord = chunkToArraySpace(worldToChunkSpace(vPlayerPos));
@@ -429,7 +437,7 @@ public:
 			if ((selectedPos.y < 0 && my == -1) || (selectedPos.y > 255 && my == 1))
 				return false;
 
-			if (getBlock(selectedPos).getId() > 0) 
+			if (getBlock(selectedPos).getId() != BlockId::AIR) 
 			{
 				targetedPos = selectedPos;
 
@@ -460,5 +468,22 @@ public:
 		}
 
 		return false;
+	}
+
+	void collideHitbox(aabb::Hitbox3d &hitbox) const noexcept
+	{
+		Engine::vi3d vBottomIndex = std::floor(hitbox.pos);
+		Engine::vi3d vTopIndex = std::ceil(hitbox.pos + hitbox.size);
+
+		for (int32_t x = vBottomIndex.x; x < vTopIndex.x; x++)
+			for (int32_t y = vBottomIndex.y; y < vTopIndex.y; y++)
+				for (int32_t z = vBottomIndex.z; z < vTopIndex.z; z++)
+				{
+					Engine::vf3d vCoordinate = Engine::vf3d(x, y, z);
+					const aabb::Hitbox3d blockHitbox = aabb::Hitbox3d(vCoordinate, Engine::vf3d(1.0f, 1.0f, 1.0f));
+
+					if (blockHitbox.collides(hitbox))
+						CollisionSystem::ResolveCollision(hitbox, blockHitbox);
+				}
 	}
 };

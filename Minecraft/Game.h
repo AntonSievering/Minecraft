@@ -79,11 +79,11 @@ public:
 		{
 			if (GetKey(Engine::Key::MOUSE_LEFT).bPressed)
 			{
-				world->setBlock_Update(vSelected, Block(0));
+				world->setBlock_Update(vSelected, Block(BlockId::AIR));
 			}
 			else if (GetKey(Engine::Key::MOUSE_RIGHT).bPressed)
 			{
-				world->setBlock_Update(vTargeted, Block(1, 0, 0));
+				world->setBlock_Update(vTargeted, Block(BlockId::STONE));
 				highlight.render(camera, vTargeted);
 			}
 			else

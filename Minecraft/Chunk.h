@@ -46,7 +46,7 @@ private:
 	{
 		auto faceNeeded = [](const Block block) -> bool
 		{
-			return block.getId() == 0;
+			return !block.isFullyOpaque();
 		};
 
 		std::vector<Engine::MinecraftVertex> vVertices{};
@@ -58,10 +58,10 @@ private:
 			{
 				for (uint32_t z = 0; z < g_nChunkWidth; z++)
 				{
-					uint16_t nBlockId = getBlock({ x, y, z }).getId();
+					const BlockId nBlockId = getBlock({ x, y, z }).getId();
 					Engine::vu3d coordinate = { x, y, z };
 
-					if (nBlockId > 0)
+					if (nBlockId != BlockId::AIR)
 					{
 						Block blockNorth = (x != 15) ? getBlock({ x + 1, y, z }) : north->getBlock({ 0, y, z });
 						if (faceNeeded(blockNorth))
@@ -79,11 +79,11 @@ private:
 						if (faceNeeded(blockWest))
 							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, 0);
 
-						Block blockTop = (y != 255) ? getBlock({ x, y + 1, z }) : Block(0);
+						Block blockTop = (y != 255) ? getBlock({ x, y + 1, z }) : Block(BlockId::AIR);
 						if (faceNeeded(blockTop))
 							FaceTemplate::FullBlock::fillTop(vVertices, vIndices, coordinate, 0);
 
-						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(1, 0, 0);
+						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(BlockId::STONE);
 						if (faceNeeded(blockBottom))
 							FaceTemplate::FullBlock::fillBottom(vVertices, vIndices, coordinate, 0);
 					}

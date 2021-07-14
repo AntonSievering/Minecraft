@@ -216,6 +216,7 @@
     <ClInclude Include="Engine\vec3d.h" />
     <ClInclude Include="Engine\VertexBuffer.h" />
     <ClInclude Include="FaceTemplate.h" />
+    <ClInclude Include="Facing.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="LineShader.h" />
