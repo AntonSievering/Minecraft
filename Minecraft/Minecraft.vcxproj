@@ -168,9 +168,11 @@
   <ItemGroup>
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockHighlight.h" />
+    <ClInclude Include="BlockId.h" />
     <ClInclude Include="BlockShader.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ChunkDefines.h" />
+    <ClInclude Include="CollisionSystem.h" />
     <ClInclude Include="Engine\Array1D.h" />
     <ClInclude Include="Engine\Array2D.h" />
     <ClInclude Include="Engine\Array3D.h" />
