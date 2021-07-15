@@ -46,28 +46,43 @@ public:
 		if (GetKey(Engine::Key::ESCAPE).bPressed)
 			HideMouse(false);
 
+		Engine::vf3d vMovement{};
 		if (GetHideMouseStatus())
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
-			const float fDist = 1000.0f * fElapsedTime;
-			if (GetKey(Engine::Key::W).bHeld)
-				camera.moveFront(fDist);
-			if (GetKey(Engine::Key::S).bHeld)
-				camera.moveFront(-fDist);
-			if (GetKey(Engine::Key::A).bHeld)
-				camera.moveSideways(-fDist);
-			if (GetKey(Engine::Key::D).bHeld)
-				camera.moveSideways(fDist);
-			if (GetKey(Engine::Key::SPACE).bHeld)
-				camera.moveUp(fDist);
-			if (GetKey(Engine::Key::LSHIFT).bHeld)
-				camera.moveUp(-fDist);
+			const float fFWDist = 10.0f * fElapsedTime;
+			const float fSWDist = 5.0f * fElapsedTime;
+			const float fUPDist = 5.0f * fElapsedTime;
 
-			camera.update();
+			if (GetKey(Engine::Key::W).bHeld)
+				vMovement += camera.getMoveFrontVector() * fFWDist;
+				//camera.moveFront(fDist);
+			if (GetKey(Engine::Key::S).bHeld)
+				vMovement -= camera.getMoveFrontVector() * fFWDist;
+				//camera.moveFront(-fDist);
+			if (GetKey(Engine::Key::A).bHeld)
+				vMovement -= camera.getMoveSidewaysVector() * fSWDist;
+				//camera.moveSideways(-fDist);
+			if (GetKey(Engine::Key::D).bHeld)
+				vMovement += camera.getMoveSidewaysVector() * fSWDist;
+				//camera.moveSideways(fDist);
+			if (GetKey(Engine::Key::SPACE).bHeld)
+				vMovement += camera.getMoveUpVector() * fUPDist;
+				//camera.moveUp(fDist);
+			if (GetKey(Engine::Key::LSHIFT).bHeld)
+				vMovement -= camera.getMoveUpVector() * fUPDist;
+				//camera.moveUp(-fDist);
 		}
 
-		world->update(fElapsedTime, camera.getPosition());
+		Engine::vf3d pos = camera.getPosition();
+
+		pos += vMovement;
+		world->collidePlayer(pos);
+		
+		world->update(fElapsedTime, pos);
+		camera.setPosition(pos);
+		camera.update();
 
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());

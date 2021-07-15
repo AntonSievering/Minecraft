@@ -7,6 +7,9 @@
 #include "BlockShader.h"
 #include <thread>
 #include <mutex>
+#include <vector>
+#include <tuple>
+#include <algorithm>
 
 class World
 {
@@ -268,7 +271,17 @@ public:
 			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(0, 1))->updateLayer(coordinate.y);
 	}
 
-	void update(const float fElapsedTime, Engine::vf3d &vPlayerPos) noexcept
+	void collidePlayer(Engine::vf3d &vPlayerPos) noexcept
+	{
+		// player collision
+		constexpr Engine::vf3d vPlayerSize = Engine::vf3d(0.7f, 1.8f, 0.7f);
+		constexpr Engine::vf3d vPlayerFeetEyeOffset = Engine::vf3d(0.5f * vPlayerSize.x, vPlayerSize.y, 0.5f * vPlayerSize.z);
+		aabb::Hitbox3d hitbox = aabb::Hitbox3d(vPlayerPos - vPlayerFeetEyeOffset, vPlayerSize);
+		collideHitbox(hitbox);
+		vPlayerPos = hitbox.pos + vPlayerFeetEyeOffset;
+	}
+
+	void update(const float fElapsedTime, const Engine::vf3d vPlayerPos) noexcept
 	{
 		// upload finished meshes
 		for (size_t x = 0; x < m_nOuterDiameter; x++)
@@ -280,12 +293,6 @@ public:
 					chunk->uploadData();
 			}
 		}
-
-		// player collision
-		constexpr Engine::vf3d vPlayerSize = Engine::vf3d(0.7f, 1.8f, 0.7f);
-		constexpr Engine::vf3d vPlayerFeetEyeOffset = Engine::vf3d(0.5f * vPlayerSize.x, vPlayerSize.y, 0.5f * vPlayerSize.z);
-		aabb::Hitbox3d hitbox = aabb::Hitbox3d(vPlayerPos - vPlayerFeetEyeOffset, vPlayerSize);
-		collideHitbox(hitbox);
 
 		// update player pos
 		Engine::vu2d vCurrentChunkArrayCoord = chunkToArraySpace(worldToChunkSpace(vPlayerPos));
@@ -475,15 +482,38 @@ public:
 		Engine::vi3d vBottomIndex = std::floor(hitbox.pos);
 		Engine::vi3d vTopIndex = std::ceil(hitbox.pos + hitbox.size);
 
-		for (int32_t x = vBottomIndex.x; x < vTopIndex.x; x++)
-			for (int32_t y = vBottomIndex.y; y < vTopIndex.y; y++)
-				for (int32_t z = vBottomIndex.z; z < vTopIndex.z; z++)
-				{
-					Engine::vf3d vCoordinate = Engine::vf3d(x, y, z);
-					const aabb::Hitbox3d blockHitbox = aabb::Hitbox3d(vCoordinate, Engine::vf3d(1.0f, 1.0f, 1.0f));
+		vBottomIndex.y = std::clamp(vBottomIndex.y, 0, 255);
+		vTopIndex.y    = std::clamp(vTopIndex.y,    0, 255);
 
-					if (blockHitbox.collides(hitbox))
-						CollisionSystem::ResolveCollision(hitbox, blockHitbox);
+		// 1st pass: cache collisions and their 
+		std::vector<std::pair<aabb::Hitbox3d, float>> vCollisions;
+
+		for (int32_t x = vBottomIndex.x; x <= vTopIndex.x; x++)
+			for (int32_t y = vBottomIndex.y; y <= vTopIndex.y; y++)
+				for (int32_t z = vBottomIndex.z; z <= vTopIndex.z; z++)
+				{
+					if (getBlock(Engine::vi3d(x, y, z)).getId() != BlockId::AIR)
+					{
+						const Engine::vf3d vCoordinate = Engine::vf3d(x, y, z);
+						const aabb::Hitbox3d blockHitbox = aabb::Hitbox3d(vCoordinate, Engine::vf3d(1.0f, 1.0f, 1.0f));
+
+						if (blockHitbox.collides(hitbox))
+							//CollisionSystem::ResolveCollision(hitbox, blockHitbox);
+						{
+							Engine::vf3d offset = CollisionSystem::CreateCollisionOffsetVector(hitbox, blockHitbox);
+							float fMin = std::min(offset.x, std::min(offset.y, offset.z));
+							vCollisions.push_back(std::make_pair(blockHitbox, fMin));
+						}
+					}
 				}
+
+		std::sort(vCollisions.begin(), vCollisions.end(), [](const std::pair<aabb::Hitbox3d, float> &j, const std::pair<aabb::Hitbox3d, float> &k)
+			{ return j.second > k.second; });
+
+		for (const std::pair<aabb::Hitbox3d, float> &collision : vCollisions)
+		{
+			if (collision.first.collides(hitbox))
+				CollisionSystem::ResolveCollision(hitbox, collision.first);
+		}
 	}
 };
