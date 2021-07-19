@@ -64,7 +64,7 @@ public:
 
 			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.15f;
 			m_fSprintOffset = std::clamp(m_fSprintOffset, 0.0f, 1.0f);
-			camera.setFieldOfView(110.0f + m_fSprintOffset * 10.0f);
+			camera.setFieldOfView(110.0f + m_fSprintOffset * 15.0f);
 
 			float fFWSpeed = 4.5f * (1.0f + 0.2f * m_fSprintOffset);
 			float fSWSpeed = 5.0f;
@@ -72,9 +72,9 @@ public:
 			
 			if (player.bFlying)
 			{
-				fFWSpeed *= 2;
-				fSWSpeed *= 2;
-				fUPSpeed *= 2;
+				fFWSpeed *= 4;
+				fSWSpeed *= 3;
+				fUPSpeed *= 3;
 			}
 
 			if (GetKey(Engine::Key::W).bHeld && !GetKey(Engine::Key::S).bHeld)

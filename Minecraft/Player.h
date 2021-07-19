@@ -37,6 +37,7 @@ public:
 		if (bFlying)
 		{
 			fAccelerationFactor = m_pGamemode->flyAccelerationMultiplier();
+			vel.y = vTargetVel.y * 7.0f * fElapsedTime + vel.y * (1.0f - 7.0f * fElapsedTime);
 		}
 		else
 		{
