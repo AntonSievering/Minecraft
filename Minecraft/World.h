@@ -5,6 +5,7 @@
 #include "CollisionSystem.h"
 #include "Engine/Array2D.h"
 #include "BlockShader.h"
+#include "Player.h"
 #include <thread>
 #include <mutex>
 #include <vector>
@@ -271,16 +272,6 @@ public:
 			getChunkByArrayCoordinate(vArraySpace + Engine::vi2d(0, 1))->updateLayer(coordinate.y);
 	}
 
-	void collidePlayer(Engine::vf3d &vPlayerPos) noexcept
-	{
-		// player collision
-		constexpr Engine::vf3d vPlayerSize = Engine::vf3d(0.7f, 1.8f, 0.7f);
-		constexpr Engine::vf3d vPlayerFeetEyeOffset = Engine::vf3d(0.5f * vPlayerSize.x, vPlayerSize.y, 0.5f * vPlayerSize.z);
-		aabb::Hitbox3d hitbox = aabb::Hitbox3d(vPlayerPos - vPlayerFeetEyeOffset, vPlayerSize);
-		collideHitbox(hitbox);
-		vPlayerPos = hitbox.pos + vPlayerFeetEyeOffset;
-	}
-
 	void update(const float fElapsedTime, const Engine::vf3d vPlayerPos) noexcept
 	{
 		// upload finished meshes
@@ -477,15 +468,14 @@ public:
 		return false;
 	}
 
-	void collideHitbox(aabb::Hitbox3d &hitbox) const noexcept
+	void collideEntity(Entity &entity) const noexcept
 	{
-		Engine::vi3d vBottomIndex = std::floor(hitbox.pos);
-		Engine::vi3d vTopIndex = std::ceil(hitbox.pos + hitbox.size);
+		Engine::vi3d vBottomIndex = std::floor(entity.hitbox.pos);
+		Engine::vi3d vTopIndex = std::ceil(entity.hitbox.pos + entity.hitbox.size);
 
 		vBottomIndex.y = std::clamp(vBottomIndex.y, 0, 255);
 		vTopIndex.y    = std::clamp(vTopIndex.y,    0, 255);
 
-		// 1st pass: cache collisions and their 
 		std::vector<std::pair<aabb::Hitbox3d, float>> vCollisions;
 
 		for (int32_t x = vBottomIndex.x; x <= vTopIndex.x; x++)
@@ -497,10 +487,9 @@ public:
 						const Engine::vf3d vCoordinate = Engine::vf3d(x, y, z);
 						const aabb::Hitbox3d blockHitbox = aabb::Hitbox3d(vCoordinate, Engine::vf3d(1.0f, 1.0f, 1.0f));
 
-						if (blockHitbox.collides(hitbox))
-							//CollisionSystem::ResolveCollision(hitbox, blockHitbox);
+						if (blockHitbox.collides(entity.hitbox))
 						{
-							Engine::vf3d offset = CollisionSystem::CreateCollisionOffsetVector(hitbox, blockHitbox);
+							Engine::vf3d offset = CollisionSystem::CreateCollisionOffsetVector(entity.hitbox, blockHitbox);
 							float fMin = std::min(offset.x, std::min(offset.y, offset.z));
 							vCollisions.push_back(std::make_pair(blockHitbox, fMin));
 						}
@@ -512,8 +501,8 @@ public:
 
 		for (const std::pair<aabb::Hitbox3d, float> &collision : vCollisions)
 		{
-			if (collision.first.collides(hitbox))
-				CollisionSystem::ResolveCollision(hitbox, collision.first);
+			if (collision.first.collides(entity.hitbox))
+				CollisionSystem::ResolveEntityCollision(entity, collision.first);
 		}
 	}
 };

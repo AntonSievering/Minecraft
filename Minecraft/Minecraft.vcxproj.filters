@@ -232,6 +232,18 @@
     <ClInclude Include="Facing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Gamemode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shader\sprite3d\sprite3d.frag">

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -215,11 +215,15 @@
     <ClInclude Include="Engine\vec2d.h" />
     <ClInclude Include="Engine\vec3d.h" />
     <ClInclude Include="Engine\VertexBuffer.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="FaceTemplate.h" />
     <ClInclude Include="Facing.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Gamemode.h" />
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="LineShader.h" />
+    <ClInclude Include="Physics.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>

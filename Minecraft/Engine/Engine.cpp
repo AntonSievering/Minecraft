@@ -408,7 +408,7 @@ namespace Engine
 				return false;
 			}
 			// Key pressed
-			else if (event.type == SDL_KEYDOWN)
+			else if (event.type == SDL_KEYDOWN && event.key.repeat == 0)
 			{
 				uint32_t nKey = event.key.keysym.sym;
 

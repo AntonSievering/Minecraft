@@ -16,12 +16,20 @@ private:
 	BlockShader            shader;
 	BlockHighlight         highlight{};
 	World                 *world;
+	Gamemode               m_gameMode;
+	Player                 player{};
+	Engine::Timer          m_spaceDoubleClickTimer{};
+	float                  m_fSprintOffset = 0.0f;
+	float                  m_fSprintOffsetChangeDir = 1.0f;
 
 public:
 	bool OnUserCreate() noexcept override
 	{
-		camera = Engine::FloatingCamera(glm::radians(90.0f), (float)GetScreenSize().x, (float)GetScreenSize().y);
-		camera.setPosition(glm::vec3(8.0f, 0.0f, 8.0f));
+		m_gameMode = Gamemode(GameModeType::CREATIVE);
+		player = Player("Anton", &m_gameMode, { 8.0f, 0.0f, 8.0f });
+
+		camera = Engine::FloatingCamera(110.0f, (float)GetScreenSize().x, (float)GetScreenSize().y);
+		camera.setPosition(player.hitbox.pos);
 		camera.update();
 		
 		shader = BlockShader("content/shader/blockShader");
@@ -46,42 +54,68 @@ public:
 		if (GetKey(Engine::Key::ESCAPE).bPressed)
 			HideMouse(false);
 
-		Engine::vf3d vMovement{};
+		Engine::vf3d vTargetMovement{};
 		if (GetHideMouseStatus())
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
-			const float fFWDist = 10.0f * fElapsedTime;
-			const float fSWDist = 5.0f * fElapsedTime;
-			const float fUPDist = 5.0f * fElapsedTime;
+			if (GetKey(Engine::Key::Q).bPressed && m_fSprintOffset == 0.0f)
+				m_fSprintOffsetChangeDir = 1.0f;
 
-			if (GetKey(Engine::Key::W).bHeld)
-				vMovement += camera.getMoveFrontVector() * fFWDist;
-				//camera.moveFront(fDist);
-			if (GetKey(Engine::Key::S).bHeld)
-				vMovement -= camera.getMoveFrontVector() * fFWDist;
-				//camera.moveFront(-fDist);
-			if (GetKey(Engine::Key::A).bHeld)
-				vMovement -= camera.getMoveSidewaysVector() * fSWDist;
-				//camera.moveSideways(-fDist);
-			if (GetKey(Engine::Key::D).bHeld)
-				vMovement += camera.getMoveSidewaysVector() * fSWDist;
-				//camera.moveSideways(fDist);
+			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.15f;
+			m_fSprintOffset = std::clamp(m_fSprintOffset, 0.0f, 1.0f);
+			camera.setFieldOfView(110.0f + m_fSprintOffset * 10.0f);
+
+			float fFWSpeed = 4.5f * (1.0f + 0.2f * m_fSprintOffset);
+			float fSWSpeed = 5.0f;
+			float fUPSpeed = 5.0f;
+			
+			if (player.bFlying)
+			{
+				fFWSpeed *= 2;
+				fSWSpeed *= 2;
+				fUPSpeed *= 2;
+			}
+
+			if (GetKey(Engine::Key::W).bHeld && !GetKey(Engine::Key::S).bHeld)
+				vTargetMovement += camera.getMoveFrontVector() * fFWSpeed;
+			else
+				m_fSprintOffsetChangeDir = -1.0f;
+			if (GetKey(Engine::Key::S).bHeld && !GetKey(Engine::Key::W).bHeld)
+				vTargetMovement -= camera.getMoveFrontVector() * fSWSpeed;
+
+			if (GetKey(Engine::Key::A).bHeld && !GetKey(Engine::Key::D).bHeld)
+				vTargetMovement -= camera.getMoveSidewaysVector() * fSWSpeed;
+			if (GetKey(Engine::Key::D).bHeld && !GetKey(Engine::Key::A).bHeld)
+				vTargetMovement += camera.getMoveSidewaysVector() * fSWSpeed;
+			
+			if (GetKey(Engine::Key::SPACE).bPressed)
+			{
+				if (m_spaceDoubleClickTimer.getElapsedTime() < 0.4f)
+					player.toggleFlying();
+				m_spaceDoubleClickTimer.start();
+			}
+
 			if (GetKey(Engine::Key::SPACE).bHeld)
-				vMovement += camera.getMoveUpVector() * fUPDist;
-				//camera.moveUp(fDist);
+			{
+				if (player.bFlying && !GetKey(Engine::Key::LSHIFT).bHeld)
+					vTargetMovement += camera.getMoveUpVector() * fUPSpeed;
+				else
+					player.jump();
+			}
 			if (GetKey(Engine::Key::LSHIFT).bHeld)
-				vMovement -= camera.getMoveUpVector() * fUPDist;
-				//camera.moveUp(-fDist);
+			{
+				if (m_gameMode.canFly())
+					vTargetMovement -= camera.getMoveUpVector() * fUPSpeed;
+			}
 		}
 
-		Engine::vf3d pos = camera.getPosition();
+		player.update(fElapsedTime, vTargetMovement);
 
-		pos += vMovement;
-		world->collidePlayer(pos);
+		world->collideEntity(player);
 		
-		world->update(fElapsedTime, pos);
-		camera.setPosition(pos);
+		world->update(fElapsedTime, player.hitbox.pos);
+		camera.setPosition(player.getEyePosition());
 		camera.update();
 
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
@@ -98,8 +132,8 @@ public:
 			}
 			else if (GetKey(Engine::Key::MOUSE_RIGHT).bPressed)
 			{
-				world->setBlock_Update(vTargeted, Block(BlockId::STONE));
-				highlight.render(camera, vTargeted);
+				if (!aabb::Hitbox3d(vTargeted, Engine::vf3d(1.0f, 1.0f, 1.0f)).collides(player.hitbox))
+					world->setBlock_Update(vTargeted, Block(BlockId::STONE));
 			}
 			else
 			{
