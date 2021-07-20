@@ -6,6 +6,7 @@
 #include "World.h"
 #include "Engine/TextureAtlas.h"
 #include "BlockHighlight.h"
+#include "BlockManager.h"
 
 class Game : public Engine::GUIEngine
 {
@@ -39,9 +40,12 @@ public:
 
 		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
 
-		textureAtlas = Engine::TextureAtlas(image.size(), 1);
-		textureAtlas.setSlice(0, image);
+		textureAtlas = Engine::TextureAtlas(image.size(), (uint32_t)FaceId::Count);
+		for (uint32_t i = 0; i < (uint32_t)FaceId::Count; i++)
+			textureAtlas.setSlice(i, Engine::Image2D("content/sprites/blocks/" + FaceFilenames::getFilename((FaceId)i) + ".png"));
 		texture = textureAtlas.createTexture();
+
+		shader.setTextureHeight(textureAtlas.getSlotCount());
 
 		world = new World(16, camera.getPosition());
 

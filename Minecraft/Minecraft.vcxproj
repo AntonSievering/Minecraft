@@ -169,6 +169,7 @@
     <ClInclude Include="Block.h" />
     <ClInclude Include="BlockHighlight.h" />
     <ClInclude Include="BlockId.h" />
+    <ClInclude Include="BlockManager.h" />
     <ClInclude Include="BlockShader.h" />
     <ClInclude Include="Chunk.h" />
     <ClInclude Include="ChunkDefines.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Engine\vec3d.h" />
     <ClInclude Include="Engine\VertexBuffer.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="FaceId.h" />
     <ClInclude Include="FaceTemplate.h" />
     <ClInclude Include="Facing.h" />
     <ClInclude Include="Game.h" />

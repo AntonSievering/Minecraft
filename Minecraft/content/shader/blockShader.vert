@@ -29,7 +29,7 @@ void main()
 	v_brightness = brightness[(a_data1 & uint(0xC00)) >> 10];
 
 	v_texCoord.xy = texCoord[a_data2 & uint(0x3)];
-	v_texCoord.z  = float(a_data2 >> 2) / u_fTextureHeight;
+	v_texCoord.z  = (float(a_data2 >> 2) + 0.5f) / u_fTextureHeight;
 	
 	gl_Position = u_modelViewProj * vec4(x, y, z, 1.0f);
 }

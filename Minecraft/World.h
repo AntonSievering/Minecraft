@@ -78,7 +78,7 @@ private:
 					for (int x = 0; x < 16; x++)
 						for (int z = 0; z < 16; z++)
 							for (int y = 0; y < std::min(std::abs(chunk->getBaseCoordinate().x) / 16 * std::abs(chunk->getBaseCoordinate().z / 16), 255); y++)
-								chunk->setBlock(Engine::vu3d(x, y, z), Block(BlockId::STONE));
+								chunk->setBlock(Engine::vu3d(x, y, z), Block((BlockId)(rand() % 3 + 1)));
 					
 					chunk->setDataLoaded();
 

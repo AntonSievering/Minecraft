@@ -11,6 +11,7 @@
 #include "FaceTemplate.h"
 #include "ChunkDefines.h"
 #include "BlockShader.h"
+#include "BlockManager.h"
 
 class Chunk
 {
@@ -63,29 +64,31 @@ private:
 
 					if (nBlockId != BlockId::AIR)
 					{
+						BlockFaces faces = BlockManager::getBlockEntry(nBlockId).faces;
+
 						Block blockNorth = (x != 15) ? getBlock({ x + 1, y, z }) : north->getBlock({ 0, y, z });
 						if (faceNeeded(blockNorth))
-							FaceTemplate::FullBlock::fillNorth(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillNorth(vVertices, vIndices, coordinate, (uint32_t)faces.north);
 
 						Block blockSouth = (x != 0) ? getBlock({ x - 1, y, z }) : south->getBlock({ 15, y, z });
 						if (faceNeeded(blockSouth))
-							FaceTemplate::FullBlock::fillSouth(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillSouth(vVertices, vIndices, coordinate, (uint32_t)faces.south);
 
 						Block blockEast = (z != 15) ? getBlock({ x, y, z + 1 }) : east->getBlock({ x, y, 0 });
 						if (faceNeeded(blockEast))
-							FaceTemplate::FullBlock::fillEast(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillEast(vVertices, vIndices, coordinate, (uint32_t)faces.east);
 
 						Block blockWest = (z != 0) ? getBlock({ x, y, z - 1 }) : west->getBlock({ x, y, 15 });
 						if (faceNeeded(blockWest))
-							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillWest(vVertices, vIndices, coordinate, (uint32_t)faces.west);
 
 						Block blockTop = (y != 255) ? getBlock({ x, y + 1, z }) : Block(BlockId::AIR);
 						if (faceNeeded(blockTop))
-							FaceTemplate::FullBlock::fillTop(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillTop(vVertices, vIndices, coordinate, (uint32_t)faces.top);
 
 						Block blockBottom = (y != 0) ? getBlock({ x, y - 1, z }) : Block(BlockId::STONE);
 						if (faceNeeded(blockBottom))
-							FaceTemplate::FullBlock::fillBottom(vVertices, vIndices, coordinate, 0);
+							FaceTemplate::FullBlock::fillBottom(vVertices, vIndices, coordinate, (uint32_t)faces.bottom);
 					}
 				}
 			}

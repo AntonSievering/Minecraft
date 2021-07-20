@@ -38,7 +38,9 @@ namespace CollisionSystem
 		{
 			entity.hitbox.pos.y += vOverlap.y;
 			entity.vel.y = 0.0f;
-			entity.bGrounded = true;
+
+			if (vOverlap.y > 0)
+				entity.bGrounded = true;
 		}
 		else
 		{

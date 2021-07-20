@@ -61,7 +61,7 @@ public:
 	{
 		if (bGrounded)
 		{
-			vel *= 1.2f;
+			vel *= 1.15f;
 			float fJumpHeight = 1.25f;
 			float fJumpSpeed = 2.0f * std::sqrtf(g_fGravity * fJumpHeight);
 			vel.y = fJumpSpeed;
