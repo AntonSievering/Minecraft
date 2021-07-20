@@ -59,12 +59,12 @@ public:
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
-			if (GetKey(Engine::Key::Q).bPressed && m_fSprintOffset == 0.0f)
+			if (GetKey(Engine::Key::Q).bHeld && m_fSprintOffset == 0.0f)
 				m_fSprintOffsetChangeDir = 1.0f;
 
-			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.15f;
+			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.05f;
 			m_fSprintOffset = std::clamp(m_fSprintOffset, 0.0f, 1.0f);
-			camera.setFieldOfView(110.0f + m_fSprintOffset * 15.0f);
+			camera.setFieldOfView(110.0f + m_fSprintOffset * 10.0f);
 
 			float fFWSpeed = 4.5f * (1.0f + 0.2f * m_fSprintOffset);
 			float fSWSpeed = 5.0f;
@@ -101,7 +101,7 @@ public:
 				if (player.bFlying && !GetKey(Engine::Key::LSHIFT).bHeld)
 					vTargetMovement += camera.getMoveUpVector() * fUPSpeed;
 				else
-					player.jump();
+					player.jump(camera.getMoveFrontVector());
 			}
 			if (GetKey(Engine::Key::LSHIFT).bHeld)
 			{
@@ -135,10 +135,7 @@ public:
 				if (!aabb::Hitbox3d(vTargeted, Engine::vf3d(1.0f, 1.0f, 1.0f)).collides(player.hitbox))
 					world->setBlock_Update(vTargeted, Block(BlockId::STONE));
 			}
-			else
-			{
-				highlight.render(camera, vSelected);
-			}
+			highlight.render(camera, vSelected);
 		}
 		
 		return true;
