@@ -19,6 +19,7 @@ private:
 	Gamemode               m_gameMode;
 	Player                 player{};
 	Engine::Timer          m_spaceDoubleClickTimer{};
+	Engine::Timer          m_jumpOffsetTimer{};
 	float                  m_fSprintOffset = 0.0f;
 	float                  m_fSprintOffsetChangeDir = 1.0f;
 
@@ -59,12 +60,15 @@ public:
 		{
 			camera.onMouseMoved(GetRelativeMouse().x, GetRelativeMouse().y);
 
+			if (!player.bGrounded)
+				m_jumpOffsetTimer.start();
+
 			if (GetKey(Engine::Key::Q).bHeld && m_fSprintOffset == 0.0f)
 				m_fSprintOffsetChangeDir = 1.0f;
 
-			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.05f;
+			m_fSprintOffset += m_fSprintOffsetChangeDir * fElapsedTime / 0.1f;
 			m_fSprintOffset = std::clamp(m_fSprintOffset, 0.0f, 1.0f);
-			camera.setFieldOfView(110.0f + m_fSprintOffset * 10.0f);
+			camera.setFieldOfView(110.0f + m_fSprintOffset * m_fSprintOffset * 10.0f);
 
 			float fFWSpeed = 4.5f * (1.0f + 0.2f * m_fSprintOffset);
 			float fSWSpeed = 5.0f;
@@ -91,7 +95,7 @@ public:
 			
 			if (GetKey(Engine::Key::SPACE).bPressed)
 			{
-				if (m_spaceDoubleClickTimer.getElapsedTime() < 0.4f)
+				if (m_spaceDoubleClickTimer.getElapsedTime() < 0.3f)
 					player.toggleFlying();
 				m_spaceDoubleClickTimer.start();
 			}
@@ -100,7 +104,7 @@ public:
 			{
 				if (player.bFlying && !GetKey(Engine::Key::LSHIFT).bHeld)
 					vTargetMovement += camera.getMoveUpVector() * fUPSpeed;
-				else
+				else if (m_jumpOffsetTimer.getElapsedTime() > 0.05f)
 					player.jump(camera.getMoveFrontVector());
 			}
 			if (GetKey(Engine::Key::LSHIFT).bHeld)

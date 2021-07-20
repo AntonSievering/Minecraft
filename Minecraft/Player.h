@@ -61,7 +61,7 @@ public:
 	{
 		if (bGrounded)
 		{
-			vel += moveFrontVector;
+			vel *= 1.2f;
 			float fJumpHeight = 1.25f;
 			float fJumpSpeed = 2.0f * std::sqrtf(g_fGravity * fJumpHeight);
 			vel.y = fJumpSpeed;
