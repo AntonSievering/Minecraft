@@ -7,6 +7,7 @@
 #include "Engine/TextureAtlas.h"
 #include "BlockHighlight.h"
 #include "BlockManager.h"
+#include "GUI_Overlay.h"
 
 class Game : public Engine::GUIEngine
 {
@@ -23,6 +24,7 @@ private:
 	Engine::Timer          m_jumpOffsetTimer{};
 	float                  m_fSprintOffset = 0.0f;
 	float                  m_fSprintOffsetChangeDir = 1.0f;
+	GUI_Overlay            m_guiOverlay;
 
 public:
 	bool OnUserCreate() noexcept override
@@ -37,10 +39,9 @@ public:
 		shader = BlockShader("content/shader/blockShader");
 
 		highlight = BlockHighlight("content/shader/lineShader");
+		m_guiOverlay = GUI_Overlay(1, GetScreenSize());
 
-		Engine::Image2D image = Engine::Image2D("content/sprites/blocks/stone.png");
-
-		textureAtlas = Engine::TextureAtlas(image.size(), (uint32_t)FaceId::Count);
+		textureAtlas = Engine::TextureAtlas(Engine::vu2d(16, 16), (uint32_t)FaceId::Count);
 		for (uint32_t i = 0; i < (uint32_t)FaceId::Count; i++)
 			textureAtlas.setSlice(i, Engine::Image2D("content/sprites/blocks/" + FaceFilenames::getFilename((FaceId)i) + ".png"));
 		texture = textureAtlas.createTexture();
@@ -146,6 +147,8 @@ public:
 			highlight.render(camera, vSelected);
 		}
 		
+		m_guiOverlay.render(m_sSpriteShader);
+
 		return true;
 	}
 

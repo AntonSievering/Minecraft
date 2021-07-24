@@ -222,6 +222,7 @@
     <ClInclude Include="Facing.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Gamemode.h" />
+    <ClInclude Include="GUI_Overlay.h" />
     <ClInclude Include="Hitbox.h" />
     <ClInclude Include="LineShader.h" />
     <ClInclude Include="Physics.h" />
