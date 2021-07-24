@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Hitbox.h"
-#include "Entity.h"
+#include "../GameMechanics/Entity/Entity.h"
 
 namespace CollisionSystem
 {

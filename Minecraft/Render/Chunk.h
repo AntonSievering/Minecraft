@@ -5,13 +5,15 @@
 #include <vector>
 #include <thread>
 #include "Engine/Array3D.h"
-#include "Block.h"
 #include "Engine/VertexBuffer.h"
 #include "Engine/IndexBuffer.h"
+
+#include "../GameMechanics/CoreGame/Block.h"
+#include "../GameMechanics/CoreGame/BlockManager.h"
+
 #include "FaceTemplate.h"
 #include "ChunkDefines.h"
 #include "BlockShader.h"
-#include "BlockManager.h"
 
 class Chunk
 {

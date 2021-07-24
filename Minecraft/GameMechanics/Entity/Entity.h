@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Hitbox.h"
+#include "../../Physics/Hitbox.h"
 
 struct Entity
 {

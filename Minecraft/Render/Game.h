@@ -6,7 +6,6 @@
 #include "World.h"
 #include "Engine/TextureAtlas.h"
 #include "BlockHighlight.h"
-#include "BlockManager.h"
 #include "GUI_Overlay.h"
 
 class Game : public Engine::GUIEngine
@@ -36,14 +35,14 @@ public:
 		camera.setPosition(player.hitbox.pos);
 		camera.update();
 		
-		shader = BlockShader("content/shader/blockShader");
+		shader = BlockShader("Content/shader/blockShader");
 
-		highlight = BlockHighlight("content/shader/lineShader");
+		highlight = BlockHighlight("Content/shader/lineShader");
 		m_guiOverlay = GUI_Overlay(1, GetScreenSize());
 
 		textureAtlas = Engine::TextureAtlas(Engine::vu2d(16, 16), (uint32_t)FaceId::Count);
 		for (uint32_t i = 0; i < (uint32_t)FaceId::Count; i++)
-			textureAtlas.setSlice(i, Engine::Image2D("content/sprites/blocks/" + FaceFilenames::getFilename((FaceId)i) + ".png"));
+			textureAtlas.setSlice(i, Engine::Image2D("Content/sprites/blocks/" + FaceFilenames::getFilename((FaceId)i) + ".png"));
 		texture = textureAtlas.createTexture();
 
 		shader.setTextureHeight(textureAtlas.getSlotCount());

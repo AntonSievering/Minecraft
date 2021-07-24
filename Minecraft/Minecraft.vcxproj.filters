@@ -32,16 +32,6 @@
     <Filter Include="Engine\Source Files">
       <UniqueIdentifier>{ffd7efdb-5040-4bb3-84e1-8641016ceab2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="content">
-      <UniqueIdentifier>{58c9e69b-9822-4f45-af40-54aea75bdb48}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="content\shader">
-      <UniqueIdentifier>{f96de2d8-8b32-46b1-aba7-9fce1314ec5e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Header Files\Image">
       <UniqueIdentifier>{e9a4415d-3c06-408d-8482-2017ca9b5b06}</UniqueIdentifier>
     </Filter>
@@ -54,6 +44,42 @@
     <Filter Include="Engine\Header Files\Decal">
       <UniqueIdentifier>{af18538c-7444-4b0d-b2f4-fe3983b87116}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{58c9e69b-9822-4f45-af40-54aea75bdb48}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Sprites">
+      <UniqueIdentifier>{33a117b5-752d-4508-b720-65b1b80d81d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Shader">
+      <UniqueIdentifier>{f96de2d8-8b32-46b1-aba7-9fce1314ec5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Sprites\gui">
+      <UniqueIdentifier>{8881b082-ef9e-4b43-8592-825467377f8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Sprites\blocks">
+      <UniqueIdentifier>{603d394f-5439-4aa3-b018-5589917ccf0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameMechanics">
+      <UniqueIdentifier>{d00cc373-ccd3-4fed-928f-9450af00b92d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameMechanics\CoreGame">
+      <UniqueIdentifier>{8905a6ce-b3a7-4318-acc3-cd11479cc6c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameMechanics\Entity">
+      <UniqueIdentifier>{93740a12-1930-4f7f-bc65-3f1dbed7c8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameMechanics\Gamemode">
+      <UniqueIdentifier>{e56cd79a-8d50-467b-9eb3-0a85433f23a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Physics">
+      <UniqueIdentifier>{6da944fe-78b7-4507-8188-aa7d04cca044}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{0fb346c9-86c3-490a-91b3-ef4136816db7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WorldGeneration">
+      <UniqueIdentifier>{42b28cb2-c0c4-4181-b69f-123b54ef963b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\assets\isometricMask.png">
@@ -64,6 +90,210 @@
     </Image>
     <Image Include="Engine\assets\ascii-sheets\low.png">
       <Filter>Engine\assets\ascii-sheets</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\armor_bar.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\button.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\crosshair.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\fakecraft_logo.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\half_armor_bar.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\half_heart.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\heart.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\hotbar.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\missing_armor_bar.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\missing_heart.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\selected_item.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\selectedButton.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\gui\unselectableButton.png">
+      <Filter>Content\Sprites\gui</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\acacia_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\acacia_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\acacia_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\acacia_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\bedrock.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\birch_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\birch_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\birch_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\birch_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\cactus_bottom.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\cactus_side.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\cactus_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\coal_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\cobblestone.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dark_oak_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dark_oak_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dark_oak_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dark_oak_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dead_bush.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_0.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_1.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_2.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_3.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_4.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_5.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_6.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_7.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_8.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\destroy_stage_9.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\diamond_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\dirt.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\emerald_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\gold_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\grass.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\grass_block_side.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\grass_block_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\gravel.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\iron_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\jungle_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\jungle_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\jungle_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\jungle_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\lapis_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\oak_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\oak_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\oak_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\oak_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\red_sand.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\redstone_ore.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\sand.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\spruce_leaves.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\spruce_log.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\spruce_log_top.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\spruce_planks.png">
+      <Filter>Content\Sprites\blocks</Filter>
+    </Image>
+    <Image Include="Content\Sprites\blocks\stone.png">
+      <Filter>Content\Sprites\blocks</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
@@ -142,24 +372,6 @@
     <ClInclude Include="Engine\VertexBuffer.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BlockShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LineShader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FaceTemplate.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Chunk.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Block.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\BaseImage.h">
       <Filter>Engine\Header Files\Image</Filter>
     </ClInclude>
@@ -211,47 +423,65 @@
     <ClInclude Include="Engine\BaseSprite.h">
       <Filter>Engine\Header Files\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="ChunkDefines.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\CoreGame\Block.h">
+      <Filter>GameMechanics\CoreGame</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\CoreGame\BlockId.h">
+      <Filter>GameMechanics\CoreGame</Filter>
     </ClInclude>
-    <ClInclude Include="BlockHighlight.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\CoreGame\BlockManager.h">
+      <Filter>GameMechanics\CoreGame</Filter>
     </ClInclude>
-    <ClInclude Include="Hitbox.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\CoreGame\FaceId.h">
+      <Filter>GameMechanics\CoreGame</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionSystem.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\CoreGame\Facing.h">
+      <Filter>GameMechanics\CoreGame</Filter>
     </ClInclude>
-    <ClInclude Include="BlockId.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\Entity\Entity.h">
+      <Filter>GameMechanics\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Facing.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\Entity\Player.h">
+      <Filter>GameMechanics\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Gamemode.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="GameMechanics\Gamemode\Gamemode.h">
+      <Filter>GameMechanics\Gamemode</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Physics\CollisionSystem.h">
+      <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Physics\Hitbox.h">
+      <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Physics\Constants.h">
+      <Filter>Physics</Filter>
     </ClInclude>
-    <ClInclude Include="BlockManager.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Render\BlockHighlight.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="FaceId.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Render\BlockShader.h">
+      <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="GUI_Overlay.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Render\Chunk.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ChunkDefines.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\FaceTemplate.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Game.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GUI_Overlay.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\LineShader.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\World.h">
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,16 +498,16 @@
       <Filter>Engine\Shader\sprite2d</Filter>
     </None>
     <None Include="content\shader\blockShader.frag">
-      <Filter>content\shader</Filter>
+      <Filter>Content\Shader</Filter>
     </None>
     <None Include="content\shader\blockShader.vert">
-      <Filter>content\shader</Filter>
+      <Filter>Content\Shader</Filter>
     </None>
     <None Include="content\shader\lineShader.frag">
-      <Filter>content\shader</Filter>
+      <Filter>Content\Shader</Filter>
     </None>
     <None Include="content\shader\lineShader.vert">
-      <Filter>content\shader</Filter>
+      <Filter>Content\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

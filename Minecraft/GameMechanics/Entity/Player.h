@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Entity.h"
-#include "Gamemode.h"
-#include "Physics.h"
+#include "../Gamemode/Gamemode.h"
+#include "../../Physics/Constants.h"
 
 constexpr Engine::vf3d g_vPlayerSize          = Engine::vf3d(0.7f, 1.8f, 0.7f);
 constexpr Engine::vf3d g_vPlayerFeetEyeOffset = Engine::vf3d(0.5f * g_vPlayerSize.x, g_vPlayerSize.y - 0.10f, 0.5f * g_vPlayerSize.z);

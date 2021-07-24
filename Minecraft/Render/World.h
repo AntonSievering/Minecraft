@@ -1,16 +1,17 @@
 #pragma once
 
-#include "Chunk.h"
-#include "Hitbox.h"
-#include "CollisionSystem.h"
-#include "Engine/Array2D.h"
-#include "BlockShader.h"
-#include "Player.h"
 #include <thread>
 #include <mutex>
 #include <vector>
 #include <tuple>
 #include <algorithm>
+
+#include "../GameMechanics/Entity/Player.h"
+#include "../Physics/CollisionSystem.h"
+
+#include "Chunk.h"
+#include "Engine/Array2D.h"
+#include "BlockShader.h"
 
 class World
 {
