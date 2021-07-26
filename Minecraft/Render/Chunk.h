@@ -19,7 +19,7 @@ class Chunk
 {
 private:
 	Engine::Array3D<Block> m_blocks{};
-	Engine::vi3d m_vBaseCoordinate{};
+	Engine::vi3d m_vBaseCoordinate{}, m_vBaseChunkCoordinate{};
 	bool m_bDataLoaded   = false;
 	bool m_bMeshUploaded = false;
 
@@ -35,9 +35,10 @@ public:
 public:
 	Chunk() noexcept = default;
 
-	Chunk(const Engine::vi3d baseCoordinate) noexcept
+	Chunk(const Engine::vi3d baseChunkCoordinate) noexcept
 	{
-		m_vBaseCoordinate = baseCoordinate;
+		m_vBaseChunkCoordinate = baseChunkCoordinate;
+		m_vBaseCoordinate = Engine::vi3d(16, 1, 16) * baseChunkCoordinate;
 		m_blocks = Engine::Array3D<Block>(Engine::vu3d(g_nChunkWidth, g_nChunkHeight, g_nChunkWidth));
 
 		for (uint16_t i = 0; i < 16; i++)
@@ -124,6 +125,11 @@ public:
 	Engine::vi3d getBaseCoordinate() const noexcept
 	{
 		return m_vBaseCoordinate;
+	}
+
+	Engine::vi3d getBaseChunkCoordinate() const noexcept
+	{
+		return m_vBaseChunkCoordinate;
 	}
 
 	Block getBlock(const Engine::vu3d index) const noexcept

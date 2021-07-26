@@ -109,7 +109,7 @@ public:
 				if (player.bFlying && !GetKey(Engine::Key::LSHIFT).bHeld)
 					vTargetMovement += camera.getMoveUpVector() * fUPSpeed;
 				else if (m_jumpOffsetTimer.getElapsedTime() > 0.05f)
-					player.jump(camera.getMoveFrontVector());
+					player.jump(m_fSprintOffset);
 			}
 			if (GetKey(Engine::Key::LSHIFT).bHeld)
 			{
@@ -147,6 +147,8 @@ public:
 		}
 		
 		m_guiOverlay.render(m_sSpriteShader);
+
+		std::cout << player.hitbox.pos << std::endl;
 
 		return true;
 	}

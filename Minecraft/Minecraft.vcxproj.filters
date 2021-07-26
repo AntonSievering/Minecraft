@@ -483,6 +483,9 @@
     <ClInclude Include="Render\World.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="WorldGeneration\NoiseGenerator.h">
+      <Filter>WorldGeneration</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Engine\Shader\sprite3d\sprite3d.frag">
@@ -519,6 +522,9 @@
     </ClCompile>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldGeneration\NoiseGenerator.cpp">
+      <Filter>WorldGeneration</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

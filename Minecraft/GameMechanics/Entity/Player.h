@@ -57,11 +57,11 @@ public:
 		bGrounded = false;
 	}
 
-	void jump(const Engine::vf3d &moveFrontVector) noexcept
+	void jump(const float fSprint) noexcept
 	{
 		if (bGrounded)
 		{
-			vel *= 1.15f;
+			vel += vel * 0.15f * fSprint;
 			float fJumpHeight = 1.25f;
 			float fJumpSpeed = 2.0f * std::sqrtf(g_fGravity * fJumpHeight);
 			vel.y = fJumpSpeed;

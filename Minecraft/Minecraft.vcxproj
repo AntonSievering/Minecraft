@@ -296,6 +296,7 @@
     <ClInclude Include="Render\GUI_Overlay.h" />
     <ClInclude Include="Render\LineShader.h" />
     <ClInclude Include="Render\World.h" />
+    <ClInclude Include="WorldGeneration\NoiseGenerator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="content\shader\blockShader.frag" />
@@ -311,6 +312,7 @@
     <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Engine\stbi.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="WorldGeneration\NoiseGenerator.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

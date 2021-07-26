@@ -13,6 +13,8 @@
 #include "Engine/Array2D.h"
 #include "BlockShader.h"
 
+#include "../WorldGeneration/NoiseGenerator.h"
+
 class World
 {
 private:
@@ -61,6 +63,9 @@ public:
 private:
 	void chunkLoader() noexcept
 	{
+		NoiseParameters np = { 6, 150, 200, -20, 0.6f };
+		NoiseGenerator gen = NoiseGenerator(0, np);
+
 		while (true)
 		{
 		RESET_LOADING_LOOP:
@@ -78,8 +83,11 @@ private:
 				{
 					for (int x = 0; x < 16; x++)
 						for (int z = 0; z < 16; z++)
-							for (int y = 0; y < std::min(std::abs(chunk->getBaseCoordinate().x) / 16 * std::abs(chunk->getBaseCoordinate().z / 16), 255); y++)
+						{
+							int height = gen.getHeight(x, z, chunk->getBaseChunkCoordinate().x, chunk->getBaseChunkCoordinate().z);
+							for (int y = 0; y < height; y++)
 								chunk->setBlock(Engine::vu3d(x, y, z), Block((BlockId)(rand() % 3 + 1)));
+						}
 					
 					chunk->setDataLoaded();
 
@@ -185,7 +193,7 @@ private:
 	void createChunk(const Engine::vu2d arrayCoordinate) noexcept
 	{
 		Engine::vi2d a = arrayToChunkSpace(arrayCoordinate);
-		m_chunks.at(arrayCoordinate) = std::make_shared<Chunk>(Engine::vi3d(16 * a.x, 0, 16 * a.y));
+		m_chunks.at(arrayCoordinate) = std::make_shared<Chunk>(Engine::vi3d(a.x, 0, a.y));
 	}
 
 public:
