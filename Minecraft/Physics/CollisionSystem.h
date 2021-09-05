@@ -29,10 +29,21 @@ namespace CollisionSystem
 		Engine::vf3d vOverlap = sbox.getOverlap(entity.hitbox);
 		Engine::vf3d vAbsOverlap = std::abs(vOverlap);
 
+		auto isNegative = [](const float value) -> bool
+		{
+			return value < 0.0f;
+		};
+
+		auto updateVelocity = [isNegative](float &vel, const float fOverlap) -> void
+		{
+			if (isNegative(vel) != isNegative(fOverlap))
+				vel = 0.0f;
+		};
+
 		if (vAbsOverlap.y < vAbsOverlap.x && vAbsOverlap.y < vAbsOverlap.z)
 		{
 			entity.hitbox.pos.y += vOverlap.y;
-			entity.vel.y = 0.0f;
+			updateVelocity(entity.vel.y, vOverlap.y);
 
 			if (vOverlap.y > 0.0f)
 				entity.bGrounded = true;
@@ -40,14 +51,12 @@ namespace CollisionSystem
 		else if (vAbsOverlap.x < vAbsOverlap.z)
 		{
 			entity.hitbox.pos.x += vOverlap.x;
-			std::cout << "x\n" << vOverlap << std::endl;
-			entity.vel.x = 0.0f;
+			updateVelocity(entity.vel.x, vOverlap.x);
 		}
 		else
 		{
 			entity.hitbox.pos.z += vOverlap.z;
-			std::cout << "z\n" << vOverlap << std::endl;
-			entity.vel.z = 0.0f;
+			updateVelocity(entity.vel.z, vOverlap.y);
 		}
 	}
 }
