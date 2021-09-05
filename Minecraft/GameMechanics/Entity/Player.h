@@ -57,8 +57,20 @@ public:
 		bGrounded = false;
 	}
 
+	void updateXZ(const float fElapsedTime, const Engine::vf2d &vTargetVel) noexcept
+	{
+
+	}
+
+	void updateY(const float fElapsedTime, const float fMovement) noexcept
+	{
+
+	}
+
 	void jump(const float fSprint) noexcept
 	{
+		// wenn der Abstand zum nächsten Block kleiner ist, als die Falltiefe pro Frame, wird der Spieler gebremst. (durch falsche Kollision)
+
 		if (bGrounded)
 		{
 			vel += vel * 0.15f * fSprint;

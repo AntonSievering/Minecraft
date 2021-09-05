@@ -1,4 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "deps/stb_image.h"
-#include "deps/stb_image_write.h"
+#define _CRT_SECURE_NO_WARNINGS
+#include <stb_image.h>
+#include <stb_image_write.h>

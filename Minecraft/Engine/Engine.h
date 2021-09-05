@@ -28,9 +28,6 @@
 #include "Decal.h"
 #include "TransformedView.h"
 
-#include "deps/stb_image.h"
-#include "deps/stb_image_write.h"
-
 #ifdef _WIN32
 #include <Windows.h>
 #endif

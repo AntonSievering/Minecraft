@@ -29,7 +29,7 @@ public:
 	bool OnUserCreate() noexcept override
 	{
 		m_gameMode = Gamemode(GameModeType::CREATIVE);
-		player = Player("Anton", &m_gameMode, { 8.0f, 0.0f, 8.0f });
+		player = Player("Anton", &m_gameMode, { 8.0f, 120.0f, 8.0f });
 
 		camera = Engine::FloatingCamera(110.0f, (float)GetScreenSize().x, (float)GetScreenSize().y);
 		camera.setPosition(player.hitbox.pos);
@@ -119,9 +119,8 @@ public:
 		}
 
 		player.update(fElapsedTime, vTargetMovement);
-
 		world->collideEntity(player);
-		
+
 		world->update(fElapsedTime, player.hitbox.pos);
 		camera.setPosition(player.getEyePosition());
 		camera.update();
@@ -147,8 +146,6 @@ public:
 		}
 		
 		m_guiOverlay.render(m_sSpriteShader);
-
-		std::cout << player.hitbox.pos << std::endl;
 
 		return true;
 	}

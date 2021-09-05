@@ -1,6 +1,6 @@
 #pragma once
 
-#include "deps/glew/include/GL/glew.h"
+#include <GL/glew.h>
 #include <memory>
 #include "Sprite2D.h"
 

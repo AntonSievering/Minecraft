@@ -3,8 +3,8 @@
 #include "BaseImage.h"
 #include "Array2D.h"
 #include "vec2d.h"
-#include "deps/stb_image.h"
-#include "deps/stb_image_write.h"
+#include <stb_image.h>
+#include <stb_image_write.h>
 
 #include <string>
 

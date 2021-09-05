@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cmath>
 #include "vec2d.h"
-#include "deps/glm/glm.hpp"
+#include <glm/glm.hpp>
 
 namespace Engine
 {

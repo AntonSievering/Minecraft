@@ -25,7 +25,7 @@ struct BlockEntry
 	RotationAxis axis;
 };
 
-static struct BlockManager
+struct BlockManager
 {
 private:
 	static inline const std::array<BlockEntry, (size_t)BlockId::Count> data = {

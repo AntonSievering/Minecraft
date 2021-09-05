@@ -1,13 +1,13 @@
 #pragma once
 
 #define GLEW_STATIC
-#include "deps/glew/include/GL/glew.h"
+#include <GL/glew.h>
 #define SDL_MAIN_HANDLED
-#include "deps/SDL2/include/SDL.h"
+#include <SDL.h>
 
-#include "deps/glm/glm.hpp"
-#include "deps/glm/ext/matrix_transform.hpp"
-#include "deps/glm/gtc/matrix_transform.hpp"
+#include <glm/glm.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Shader.h"
 #include "Pixel.h"
@@ -25,9 +25,9 @@ namespace Engine
 
 	enum class RefreshRate : int16_t
 	{
-		REFRESH_RATE_GSYNC_FREESYNC = -1,
-		REFRESH_RATE_UNLIMITED = 0,
-		REFRESH_RATE_VSYNC = 1
+		GSYNC_FREESYNC = -1,
+		UNLIMITED = 0,
+		VSYNC = 1
 	};
 
 	enum class Key : uint32_t

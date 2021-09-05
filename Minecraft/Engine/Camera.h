@@ -73,7 +73,7 @@ namespace Engine
 		// fov in degrees
 		void setFieldOfView(const float fov) noexcept
 		{
-			m_mProjection = glm::perspective(glm::radians(fov), m_vScreenSize.x / m_vScreenSize.y, 0.01f, 10000.0f);
+			m_mProjection = glm::perspective(glm::radians(fov), m_vScreenSize.x / m_vScreenSize.y, 0.1f, 1000.0f);
 		}
 
 		float getFieldOfView() const noexcept
