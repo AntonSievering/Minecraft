@@ -264,6 +264,8 @@
     <ClInclude Include="Engine\KeyManager.h" />
     <ClInclude Include="Engine\MathHelper.h" />
     <ClInclude Include="Engine\Pixel.h" />
+    <ClInclude Include="Engine\polar2.h" />
+    <ClInclude Include="Engine\polar3.h" />
     <ClInclude Include="Engine\RenderTarget.h" />
     <ClInclude Include="Engine\Shader.h" />
     <ClInclude Include="Engine\Sprite2D.h" />

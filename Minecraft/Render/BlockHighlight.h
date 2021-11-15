@@ -39,16 +39,20 @@ public:
 private:
 	static Engine::LineVertex *createVertices() noexcept
 	{
-		Engine::LineVertex vertices[8] = {
-			{ { 0.0f, 0.0f, 0.0f } },
-			{ { 1.0f, 0.0f, 0.0f } },
-			{ { 1.0f, 0.0f, 1.0f } },
-			{ { 0.0f, 0.0f, 1.0f } },
+		constexpr float fBlockOffset = 0.0025f;
+		constexpr float fLower = 0.0f - fBlockOffset;
+		constexpr float fUpper = 1.0f + fBlockOffset;
 
-			{ { 0.0f, 1.0f, 0.0f } },
-			{ { 1.0f, 1.0f, 0.0f } },
-			{ { 1.0f, 1.0f, 1.0f } },
-			{ { 0.0f, 1.0f, 1.0f } }
+		Engine::LineVertex vertices[8] = {
+			{ { fLower, fLower, fLower } },
+			{ { fUpper, fLower, fLower } },
+			{ { fUpper, fLower, fUpper } },
+			{ { fLower, fLower, fUpper } },
+
+			{ { fLower, fUpper, fLower } },
+			{ { fUpper, fUpper, fLower } },
+			{ { fUpper, fUpper, fUpper } },
+			{ { fLower, fUpper, fUpper } }
 		};
 
 		return vertices;

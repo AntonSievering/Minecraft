@@ -16,7 +16,7 @@ private:
 	Engine::Sprite3D       texture;
 	BlockShader            shader;
 	BlockHighlight         highlight{};
-	World                 *world;
+	std::unique_ptr<World> m_pWorld;
 	Gamemode               m_gameMode;
 	Player                 player{};
 	Engine::Timer          m_spaceDoubleClickTimer{};
@@ -47,7 +47,7 @@ public:
 
 		shader.setTextureHeight(textureAtlas.getSlotCount());
 
-		world = new World(16, camera.getPosition());
+		m_pWorld = std::make_unique<World>(16, camera.getPosition());
 
 		return true;
 	}
@@ -119,28 +119,28 @@ public:
 		}
 
 		player.update(fElapsedTime, vTargetMovement);
-		world->collideEntity(player);
+		m_pWorld->collideEntity(player);
 
-		world->update(fElapsedTime, player.hitbox.pos);
+		m_pWorld->update(fElapsedTime, player.hitbox.pos);
 		camera.setPosition(player.getEyePosition());
 		camera.update();
 
 		Clear(Engine::BLUE, GL_DEPTH_BUFFER_BIT);
 		shader.setModelViewProjectionMatrix(camera.getViewProj());
 		texture.bind();
-		world->render(shader);
+		m_pWorld->render(shader);
 
 		Engine::vi3d vSelected, vTargeted;
-		if (world->getSelectedBlock_DDA(camera, vSelected, vTargeted))
+		if (m_pWorld->getSelectedBlock_DDA(camera, vSelected, vTargeted))
 		{
 			if (GetKey(Engine::Key::MOUSE_LEFT).bPressed)
 			{
-				world->setBlock_Update(vSelected, Block(BlockId::AIR));
+				m_pWorld->setBlock_Update(vSelected, Block(BlockId::AIR));
 			}
 			else if (GetKey(Engine::Key::MOUSE_RIGHT).bPressed)
 			{
 				if (!aabb::Hitbox3d(vTargeted, Engine::vf3d(1.0f, 1.0f, 1.0f)).collides(player.hitbox))
-					world->setBlock_Update(vTargeted, Block(BlockId::STONE));
+					m_pWorld->setBlock_Update(vTargeted, Block(BlockId::STONE));
 			}
 			highlight.render(camera, vSelected);
 		}

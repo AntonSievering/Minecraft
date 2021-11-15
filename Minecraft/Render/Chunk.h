@@ -45,6 +45,11 @@ public:
 			m_vLayersToLoad[i] = true;
 	}
 
+	virtual ~Chunk() noexcept
+	{
+
+	}
+
 private:
 	void buildLayer(const uint16_t layer, const Chunk *north, const Chunk *south, const Chunk *east, const Chunk *west) noexcept
 	{

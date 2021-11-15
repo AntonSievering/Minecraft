@@ -80,6 +80,9 @@
     <Filter Include="WorldGeneration">
       <UniqueIdentifier>{42b28cb2-c0c4-4181-b69f-123b54ef963b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Header Files\vector">
+      <UniqueIdentifier>{8b0396f1-9868-42da-92a6-07e9d4efd1cf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Engine\assets\isometricMask.png">
@@ -363,12 +366,6 @@
     <ClInclude Include="Engine\util.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\vec2d.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\vec3d.h">
-      <Filter>Engine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\VertexBuffer.h">
       <Filter>Engine\Header Files</Filter>
     </ClInclude>
@@ -485,6 +482,18 @@
     </ClInclude>
     <ClInclude Include="WorldGeneration\NoiseGenerator.h">
       <Filter>WorldGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\vec3d.h">
+      <Filter>Engine\Header Files\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\vec2d.h">
+      <Filter>Engine\Header Files\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\polar2.h">
+      <Filter>Engine\Header Files\vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\polar3.h">
+      <Filter>Engine\Header Files\vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
